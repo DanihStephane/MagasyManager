@@ -96,9 +96,11 @@ const articles = [
                 Accueil
               </Link>
             </Button>
-            <Button className="bg-gradient-to-r from-primary to-secondary">
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Ajouter un Article
+            <Button asChild className="bg-gradient-to-r from-primary to-secondary">
+              <Link to="/ajouter-article">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Ajouter un Article
+              </Link>
             </Button>
           </div>
         </div>
