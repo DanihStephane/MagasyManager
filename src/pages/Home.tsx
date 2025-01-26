@@ -47,45 +47,48 @@ export default function Home() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/20 via-background to-secondary/20 flex flex-col">
-      <div className="absolute inset-0 bg-grid-white/[0.02] -z-[1]" />
+    <div className="min-h-screen bg-gradient-to-br from-pink-400/30 via-purple-400/30 to-blue-400/30 flex flex-col">
+      <div className="absolute inset-0 bg-[url('/candy-pattern.png')] opacity-5 -z-[1]" />
       
-      <header className="bg-background/60 backdrop-blur-xl border-b border-border/40 sticky top-0 z-50">
+      <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b-2 border-pink-300/50 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Layout className="h-6 w-6 text-primary" />
-            <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
-              Gestion de Magasin
+          <div className="flex items-center gap-3">
+            <Layout className="h-8 w-8 text-pink-500 animate-bounce" />
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
+              MagasyManager
             </h1>
           </div>
           <Button
             variant="ghost"
             size="icon"
+            className="rounded-full hover:bg-pink-100 dark:hover:bg-pink-900"
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           >
-            {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            {theme === 'dark' ? <Sun className="h-5 w-5 text-yellow-400" /> : <Moon className="h-5 w-5 text-blue-400" />}
           </Button>
         </div>
       </header>
       
-      <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 flex-grow">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <main className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 flex-grow">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {modules.map((module) => (
-            <Card key={module.title} className="group relative overflow-hidden border border-border/50 bg-background/60 backdrop-blur-xl hover:shadow-2xl hover:shadow-primary/20 transition-all duration-300">
+            <Card key={module.title} className="group relative overflow-hidden rounded-2xl border-2 border-pink-200/50 dark:border-purple-700/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl hover:scale-105 hover:shadow-xl hover:shadow-pink-500/20 transition-all duration-300 transform-gpu">
               <Link to={module.path} className="block h-full">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-r from-pink-400/10 via-purple-400/10 to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <CardHeader>
-                  <div className="text-4xl mb-2 transform group-hover:scale-110 transition-transform">{module.icon}</div>
-                  <CardTitle className="bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
+                  <div className="text-6xl mb-4 transform group-hover:scale-110 group-hover:rotate-12 transition-transform duration-300 text-center">
+                    {module.icon}
+                  </div>
+                  <CardTitle className="text-xl text-center bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text font-bold">
                     {module.title}
                   </CardTitle>
-                  <CardDescription className="text-muted-foreground">
+                  <CardDescription className="text-center text-gray-600 dark:text-gray-300 mt-2">
                     {module.description}
                   </CardDescription>
                 </CardHeader>
                 <CardFooter>
-                  <Button className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90">
-                    Voir
+                  <Button className="w-full rounded-xl bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:opacity-90 transform hover:-translate-y-1 transition-all duration-200">
+                    Accéder
                   </Button>
                 </CardFooter>
               </Link>
@@ -94,10 +97,10 @@ export default function Home() {
         </div>
       </main>
 
-      <footer className="bg-background/60 backdrop-blur-xl border-t border-border/40">
+      <footer className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t-2 border-pink-300/50">
         <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-          <p className="text-center text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Gestion de Magasin. Tous droits réservés.
+          <p className="text-center text-sm text-gray-600 dark:text-gray-300">
+            © {new Date().getFullYear()} MagasyManager. Tous droits réservés.
           </p>
         </div>
       </footer>
