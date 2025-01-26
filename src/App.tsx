@@ -8,6 +8,7 @@ import Mouvement from './pages/Mouvement';
 import Vente from './pages/Vente';
 import AjouterArticle from "./pages/AjouterArticle";
 import RecapitulatifArticle from "./pages/RecapitulatifArticle";
+import CommandeSurplus from "./pages/CommandeSurplus";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
       <Route path="/vente" element={<Vente />} />
       <Route path="/ajouter-article" element={<AjouterArticle />} />
       <Route path="/recapitulatif-article" element={<RecapitulatifArticle />} />
+      <Route path="/commande-surplus" element={<CommandeSurplus />} />
     </Routes>
   );
 }
