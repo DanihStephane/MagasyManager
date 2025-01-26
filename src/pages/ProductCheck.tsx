@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Home, Store, Package, Filter, Calendar } from "lucide-react"
+import { Home, Store, Package, Filter, Calendar, BarChart } from "lucide-react"
 import { Link } from "react-router-dom"
 import { 
   Select,
@@ -126,6 +126,12 @@ export function ProductCheck() {
                 Récapitulation Journalière
               </Link>
             </Button>
+            <Button asChild variant="outline" className="bg-background/60 backdrop-blur-xl">
+              <Link to="/graph-stats">
+                <BarChart className="mr-2 h-4 w-4" />
+                Statistique en graphique
+              </Link>
+            </Button>
             <Button asChild variant="ghost">
               <Link to="/">
                 <Home className="mr-2 h-4 w-4" />
@@ -134,7 +140,6 @@ export function ProductCheck() {
             </Button>
           </div>
         </div>
-
         <div className="grid gap-8">
           {/* Section Magasins */}
           <Card className="bg-background/60 backdrop-blur-xl">

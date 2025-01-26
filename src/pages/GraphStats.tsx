@@ -171,6 +171,15 @@ export function GraphStats() {
                 Récapitulation Journalière
               </Link>
             </Button>
+            
+            {/* Nouveau bouton */}
+            <Button asChild variant="outline" className="bg-background/60 backdrop-blur-xl">
+              <Link to="/product-check">
+                <BarChart2 className="mr-2 h-4 w-4" />
+                Check nombre de produit disponible
+              </Link>
+            </Button>
+            
             <Button asChild variant="ghost">
               <Link to="/">
                 <Home className="mr-2 h-4 w-4" />
@@ -179,7 +188,6 @@ export function GraphStats() {
             </Button>
           </div>
         </div>
-
         <Card className="bg-background/60 backdrop-blur-xl">
           <CardHeader>
             <div className="flex justify-between items-center">
