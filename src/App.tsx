@@ -9,6 +9,7 @@ import Vente from './pages/Vente';
 import AjouterArticle from "./pages/AjouterArticle";
 import RecapitulatifArticle from "./pages/RecapitulatifArticle";
 import CommandeSurplus from "./pages/CommandeSurplus";
+import CommandeStock from "./pages/CommandeStock";
 
 function App() {
   return (
@@ -23,6 +24,8 @@ function App() {
       <Route path="/ajouter-article" element={<AjouterArticle />} />
       <Route path="/recapitulatif-article" element={<RecapitulatifArticle />} />
       <Route path="/commande-surplus" element={<CommandeSurplus />} />
+      <Route path="/commande-stock" element={<CommandeStock />} />
+
     </Routes>
   );
 }
