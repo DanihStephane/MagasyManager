@@ -10,6 +10,7 @@ import AjouterArticle from "./pages/AjouterArticle";
 import RecapitulatifArticle from "./pages/RecapitulatifArticle";
 import CommandeSurplus from "./pages/CommandeSurplus";
 import CommandeStock from "./pages/CommandeStock";
+import Depassement from "./pages/Depassement";
 
 function App() {
   return (
@@ -25,9 +26,8 @@ function App() {
       <Route path="/recapitulatif-article" element={<RecapitulatifArticle />} />
       <Route path="/commande-surplus" element={<CommandeSurplus />} />
       <Route path="/commande-stock" element={<CommandeStock />} />
-
+      <Route path="/depassement" element={<Depassement />} />
     </Routes>
   );
 }
-
 export default App;

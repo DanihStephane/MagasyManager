@@ -11,9 +11,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { AlertTriangle } from "lucide-react";
 
 
-
+import { DepassementContent } from "@/components/DepassementContent";
 
 interface Product {
   category: string;
@@ -44,6 +46,11 @@ export default function CommandeStock() {
 
   const [businessPrice, setBusinessPrice] = useState(1000000); // Prix d'affaire initial
     const [totalPrice, setTotalPrice] = useState(0); // Prix total des articles
+
+    const [showDepassementDialog, setShowDepassementDialog] = useState(false);
+
+    // Add new state at the top with other states
+const [isDepassementMode, setIsDepassementMode] = useState(false);
 
 
   const calculateTotalQuantity = () => {
@@ -94,28 +101,30 @@ export default function CommandeStock() {
     }, 0);
   };
 
-  const handleAddToCart = () => {
+  // Modify handleAddToCart to bypass price check in depassement mode
+const handleAddToCart = () => {
     const categoryItem = categories.find(cat => cat.name === selectedCategory);
     if (!categoryItem) return;
   
     const newItemTotal = categoryItem.price * Number(quantity);
     const newTotalPrice = calculateTotalPrice() + newItemTotal;
     
-    if (newTotalPrice > businessPrice) {
-      setErrorMessage("Vous avez atteint la limite maximum de prix du magasin");
-      return;
-    }
+    if(!isDepassementMode) {
+            if (newTotalPrice > businessPrice) {
+                setErrorMessage("Vous avez atteint la limite maximum de prix du magasin");
+                return;
+            }
+        }
   
-    setErrorMessage(null);
     const newItem = {
-      category: selectedCategory,
-      quantity: Number(quantity)
+        category: selectedCategory,
+        quantity: Number(quantity)
     };
     
     setCart([...cart, newItem]);
     setStep(1);
     setQuantity("");
-  };
+};
   
 
   const handleRemoveFromCart = (index: number) => {
@@ -175,10 +184,40 @@ export default function CommandeStock() {
       
         <StepIndicator currentStep={step} />
         {errorMessage && (
-            <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
+            <div className={`mb-4 p-4 border rounded-md flex justify-between items-center
+                ${isDepassementMode 
+                    ? 'bg-green-100 border-green-400 text-green-700' 
+                    : 'bg-red-100 border-red-400 text-red-700'
+                }`}>
                 <p className="font-medium">{errorMessage}</p>
+                {!isDepassementMode && (
+                    <Button 
+                        variant="outline"
+                        className="flex items-center gap-2 bg-white/50 hover:bg-white/80 transition-colors duration-300 shadow-sm"
+                        onClick={() => setShowDepassementDialog(true)}
+                    >
+                        <AlertTriangle className="h-4 w-4 text-yellow-500" />
+                        Permettre le dépassement
+                    </Button>
+                )}
             </div>
-            )}
+        )}
+
+
+<Dialog open={showDepassementDialog} onOpenChange={setShowDepassementDialog}>
+    <DialogContent className="max-w-2xl">
+        <DialogHeader>
+            <DialogTitle>Permettre le dépassement</DialogTitle>
+        </DialogHeader>
+        <DepassementContent onSuccess={() => {
+            setShowDepassementDialog(false);
+            setErrorMessage(null);
+            setIsDepassementMode(true);
+            // Show success message in green
+            setErrorMessage("Vous êtes en mode de dépassement sans limite de produit");
+        }} />
+    </DialogContent>
+</Dialog>
 
         <Card className="mb-8">
             <CardHeader>
@@ -203,11 +242,20 @@ export default function CommandeStock() {
                         <span>{calculateTotalPrice().toLocaleString()} / {businessPrice.toLocaleString()} Ar</span>
                     </div>
                     <div className="relative w-full h-2 bg-muted rounded-full">
-                        <div 
-                            className="absolute h-full bg-primary rounded-full transition-all duration-300"
-                            style={{ width: `${(calculateTotalPrice() / businessPrice) * 100}%` }}
-                        />
-                    </div>
+    <div 
+        className={`absolute h-full rounded-full transition-all duration-300 
+            ${isDepassementMode 
+                ? 'bg-gradient-to-l from-red-500 via-red-400 to-red-300' 
+                : 'bg-gradient-to-l from-primary via-primary/80 to-primary/60'
+            }`}
+        style={{ 
+            width: `${Math.min((calculateTotalPrice() / businessPrice) * 100, 100)}%` 
+        }}
+    />
+</div>
+
+
+
                 </div>
                 </div>
             </CardContent>
@@ -340,32 +388,35 @@ export default function CommandeStock() {
                   .filter(qty => qty.checked)
                   .map((qty) => (
                     <Button
-                      key={qty.value}
-                      variant="outline"
-                      onClick={() => {
-                        const categoryItem = categories.find(cat => cat.name === selectedCategory);
-                        if (!categoryItem) return;
+                        key={qty.value}
+                        variant="outline"
+                        onClick={() => {
+                            const categoryItem = categories.find(cat => cat.name === selectedCategory);
+                            if (!categoryItem) return;
 
-                        const newItemTotal = categoryItem.price * qty.value;
-                        const newTotalPrice = calculateTotalPrice() + newItemTotal;
-                        
-                        if (newTotalPrice > businessPrice) {
-                          setErrorMessage("Vous avez atteint la limite maximum de prix du magasin");
-                          return;
-                        }
+                            const newItemTotal = categoryItem.price * qty.value;
+                            const newTotalPrice = calculateTotalPrice() + newItemTotal;
+                            
+                            if(!isDepassementMode) {
+                                if (newTotalPrice > businessPrice) {
+                                    setErrorMessage("Vous avez atteint la limite maximum de prix du magasin");
+                                    return;
+                                }
+                            }
 
-                        setErrorMessage(null);
-                        setCart([...cart, {
-                          category: selectedCategory,
-                          quantity: qty.value
-                        }]);
-                        setStep(1);
-                        setQuantity("");
-                      }}
-                      className="h-16"
+                            setErrorMessage(null);
+                            setCart([...cart, {
+                                category: selectedCategory,
+                                quantity: qty.value
+                            }]);
+                            setStep(1);
+                            setQuantity("");
+                        }}
+                        className="h-16"
                     >
-                      {qty.value}
+                        {qty.value}
                     </Button>
+
                   ))}
               </div>
               <Input
