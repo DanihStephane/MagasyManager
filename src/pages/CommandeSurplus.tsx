@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Home, Trash2, Plus, Calculator, ArrowRight, ShoppingCart, ArrowLeft, Printer, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Accordion,
   AccordionContent,
@@ -35,6 +36,7 @@ export default function CommandeSurplus() {
   const [quantity, setQuantity] = useState("");
   const [cart, setCart] = useState<Product[]>([]);
   const [newQuantityTemp, setNewQuantityTemp] = useState('');
+  const navigate = useNavigate();
 
   const calculateTotalQuantity = () => {
     return cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -73,6 +75,21 @@ export default function CommandeSurplus() {
     setCategories(categories.map(cat => 
       cat.name === categoryName ? { ...cat, checked: !cat.checked } : cat
     ));
+  };
+
+
+  const handleValidation = () => {
+    const surplusItems = cart.map(item => ({
+      category: item.category,
+      quantity: item.quantity
+    }));
+
+    navigate('/', {
+      state: { 
+        showNotification: true,
+        surplusItems: surplusItems
+      }
+    });
   };
 
   const handleAddToCart = () => {
@@ -365,9 +382,12 @@ export default function CommandeSurplus() {
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Ajouter d'autre produit
                 </Button>
-                <Button className="bg-green-600 hover:bg-green-700">
-                  <ShoppingCart className="mr-2 h-4 w-4" />
-                  Valider l'achat
+                <Button 
+                    className="bg-green-600 hover:bg-green-700"
+                    onClick={handleValidation}
+                >
+                    <ShoppingCart className="mr-2 h-4 w-4" />
+                    Valider les articles du plus
                 </Button>
               </div>
             </CardFooter>
@@ -378,3 +398,5 @@ export default function CommandeSurplus() {
   </div>
 );
 }
+
+
