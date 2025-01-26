@@ -11,6 +11,8 @@ import RecapitulatifArticle from "./pages/RecapitulatifArticle";
 import CommandeSurplus from "./pages/CommandeSurplus";
 import CommandeStock from "./pages/CommandeStock";
 import Depassement from "./pages/Depassement";
+import { ProductCheck } from "@/pages/ProductCheck";
+import { GraphStats } from "@/pages/GraphStats";
 
 function App() {
   return (
@@ -27,7 +29,10 @@ function App() {
       <Route path="/commande-surplus" element={<CommandeSurplus />} />
       <Route path="/commande-stock" element={<CommandeStock />} />
       <Route path="/depassement" element={<Depassement />} />
+      <Route path="/product-check" element={<ProductCheck />} />
+      <Route path="/graph-stats" element={<GraphStats />} />
     </Routes>
   );
 }
+
 export default App;

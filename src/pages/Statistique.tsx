@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Home, Calendar, Filter, Search, Store } from "lucide-react";
+import { Home, Calendar, Filter, Search, Store, BarChart2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { Input } from "@/components/ui/input";
 import {
   Shirt,
@@ -21,28 +20,6 @@ import {
 } from "@/components/ui/select";
 import { useState, useMemo } from 'react';
 import { ChevronLeft, ChevronRight } from "lucide-react";
-const data = [
-  { name: 'Jan', ventes: 4000, benefices: 2400, stocks: 300 },
-  { name: 'Fév', ventes: 3000, benefices: 1398, stocks: 280 },
-  { name: 'Mar', ventes: 2000, benefices: 9800, stocks: 250 },
-  { name: 'Avr', ventes: 2780, benefices: 3908, stocks: 220 },
-  { name: 'Mai', ventes: 1890, benefices: 4800, stocks: 200 },
-  { name: 'Juin', ventes: 2390, benefices: 3800, stocks: 180 },
-];
-
-const transactions = [
-  { id: 1, date: '2024-03-20', article: 'T-shirt Premium', montant: 29.99, type: 'Vente' },
-  { id: 2, date: '2024-03-19', article: 'Jean Slim', montant: 89.99, type: 'Vente' },
-  { id: 3, date: '2024-03-18', article: 'Lot de Sweats', montant: -1500.00, type: 'Achat' },
-  { id: 4, date: '2024-03-17', article: 'Robe d\'été', montant: 79.99, type: 'Vente' },
-  { id: 5, date: '2024-03-16', article: 'Veste en cuir', montant: 199.99, type: 'Vente' },
-  { id: 6, date: '2024-03-15', article: 'Chaussures Sport', montant: -800.00, type: 'Achat' },
-  { id: 7, date: '2024-03-14', article: 'Chemise Business', montant: 59.99, type: 'Vente' },
-  { id: 8, date: '2024-03-13', article: 'Pull Cachemire', montant: 149.99, type: 'Vente' },
-  { id: 9, date: '2024-03-12', article: 'Accessoires', montant: -450.00, type: 'Achat' },
-  { id: 10, date: '2024-03-11', article: 'Pantalon Cargo', montant: 69.99, type: 'Vente' },
-];
-// Ajoutez ces imports en haut du fichier
 
 
 // Modifiez la constante CATEGORIES pour inclure les icônes
@@ -132,17 +109,11 @@ export default function Statistique() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedStore, setSelectedStore] = useState("all");
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+
 
   // Add these pagination states for products
   const [currentProductPage, setCurrentProductPage] = useState(1);
   const productsPerPage = 6; // Shows 2 rows of 3 cards
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentTransactions = transactions.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(transactions.length / itemsPerPage);
 
   const filteredRecap = useMemo(() => {
     return dailyRecap.filter(item => {
@@ -177,12 +148,26 @@ export default function Statistique() {
           <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
             Statistiques
           </h1>
-          <Button asChild variant="ghost">
-            <Link to="/">
-              <Home className="mr-2 h-4 w-4" />
-              Accueil
+          <div className="flex gap-4">
+            <Link to="/product-check">
+              <Button variant="outline" className="bg-background/60 backdrop-blur-xl">
+                <Store className="mr-2 h-4 w-4" />
+                Check nombre de produit disponible
+              </Button>
             </Link>
-          </Button>
+            <Link to="/graph-stats">
+              <Button variant="outline" className="bg-background/60 backdrop-blur-xl">
+                <BarChart2 className="mr-2 h-4 w-4" />
+                Statistique en graphique
+              </Button>
+            </Link>
+            <Button asChild variant="ghost">
+              <Link to="/">
+                <Home className="mr-2 h-4 w-4" />
+                Accueil
+              </Link>
+            </Button>
+          </div>
         </div>
 
         
@@ -360,82 +345,9 @@ export default function Statistique() {
           
             </CardContent>
           </Card>
-          <Card className="bg-background/60 backdrop-blur-xl p-6">
-            <CardHeader>
-              <CardTitle>Évolution des ventes et bénéfices</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <LineChart width={800} height={400} data={data}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="ventes" stroke="#3b82f6" />
-                <Line type="monotone" dataKey="benefices" stroke="#ec4899" />
-                <Line type="monotone" dataKey="stocks" stroke="#10b981" />
-              </LineChart>
-            </CardContent>
-          </Card>
+          
 
-          <Card className="bg-background/60 backdrop-blur-xl">
-            <CardHeader>
-              <CardTitle>Dernières transactions</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="relative overflow-x-auto">
-                <table className="w-full text-sm text-left">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="px-6 py-3">Date</th>
-                      <th className="px-6 py-3">Article</th>
-                      <th className="px-6 py-3">Type</th>
-                      <th className="px-6 py-3">Montant</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {currentTransactions.map((transaction) => (
-                      <tr key={transaction.id} className="border-b">
-                        <td className="px-6 py-4">{transaction.date}</td>
-                        <td className="px-6 py-4">{transaction.article}</td>
-                        <td className="px-6 py-4">{transaction.type}</td>
-                        <td className={`px-6 py-4 ${transaction.montant < 0 ? 'text-red-500' : 'text-green-500'}`}>
-                          {transaction.montant.toFixed(2)}€
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-
-<div className="flex items-center justify-between px-6 py-4">
-  <div className="text-sm text-muted-foreground">
-    Page {currentPage} sur {totalPages}
-  </div>
-  <div className="flex gap-2">
-    <Button
-      variant="outline"
-      size="sm"
-      onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-      disabled={currentPage === 1}
-    >
-      <ChevronLeft className="h-4 w-4" />
-      Précédent
-    </Button>
-    <Button
-      variant="outline"
-      size="sm"
-      onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-      disabled={currentPage === totalPages}
-    >
-      Suivant
-      <ChevronRight className="h-4 w-4" />
-    </Button>
-  </div>
-</div>
-
-              </div>
-            </CardContent>
-          </Card>
+          
         </div>
       </div>
     </div>
