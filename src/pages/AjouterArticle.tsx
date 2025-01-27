@@ -27,13 +27,17 @@ export default function AjouterArticle() {
     dessin: "",
     pointure: "",
     couleur: "",
-    image: ""
+    reference: "#",
+    image: "",
+    prixUnitaire: "",
+    quantite: "",
+    description: ""
   });
   const [showRecap, setShowRecap] = useState(false);  // Définition des étapes
   const navigate = useNavigate();
   const steps: Step[] = [
     {
-      title: "Genres",
+      title: "Genre",
       choices: [
         { id: "homme", name: "Hommes", imageUrl: "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?q=80" },
         { id: "femme", name: "Femmes", imageUrl: "https://images.unsplash.com/photo-1617551307353-1185d5efe9e1?q=80" },
@@ -42,7 +46,7 @@ export default function AjouterArticle() {
       ]
     },
     {
-      title: "Classes",
+      title: "Classe",
       choices: [
         { id: "debardeur", name: "Débardeur", imageUrl: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80" },
         { id: "body", name: "Body", imageUrl: "https://images.unsplash.com/photo-1525507707867-d09247ed719c?q=80" },
@@ -55,7 +59,7 @@ export default function AjouterArticle() {
       ]
     },
     {
-      title: "Matière",
+      title: "Matiere",
       choices: [
         { id: "cotton", name: "Cotton", imageUrl: "https://images.unsplash.com/photo-1585537249610-42b01a1faa72?q=80" },
         { id: "lin", name: "Lin", imageUrl: "https://images.unsplash.com/photo-1595475207225-428b62bda831?q=80" },
@@ -201,6 +205,66 @@ export default function AjouterArticle() {
                   />
                 </div>
                 <div>
+                  <label className="text-sm font-medium">Numéro de référence *</label>
+                  <div className="relative">
+                    <Input 
+                      type="text" 
+                      placeholder="#000000"
+                      maxLength={7}
+                      required
+                      value={selections.reference}
+                      onChange={(e) => {
+                        let value = e.target.value;
+                        if (!value.startsWith('#')) {
+                          value = '#' + value;
+                        }
+                        value = '#' + value.slice(1).replace(/[^\d]/g, '');
+                        if (value.length <= 7) {
+                          setSelections({...selections, reference: value});
+                        }
+                      }}
+                      className="pl-7"
+                    />
+                    <div className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-500">
+                      {!selections.reference.startsWith('#') && '#'}
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Le numéro de référence doit commencer par # suivi de 6 chiffres (ex: #123456)
+                  </p>
+                  <p className="text-sm text-red-500 mt-1">* Champ obligatoire</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Prix unitaire (Ar)</label>
+                  <Input 
+                    type="number"
+                    placeholder="Entrez le prix unitaire"
+                    value={selections.prixUnitaire}
+                    onChange={(e) => setSelections({...selections, prixUnitaire: e.target.value})}
+                    min="0"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Quantité</label>
+                  <Input 
+                    type="number"
+                    placeholder="Entrez la quantité"
+                    value={selections.quantite}
+                    onChange={(e) => setSelections({...selections, quantite: e.target.value})}
+                    min="1"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Description</label>
+                  <textarea
+                    className="w-full p-2 border rounded-md"
+                    rows={4}
+                    placeholder="Entrez une description de l'article"
+                    value={selections.description}
+                    onChange={(e) => setSelections({...selections, description: e.target.value})}
+                  />
+                </div>
+                <div>
                   <label className="text-sm font-medium">Couleur</label>
                   <div className="grid grid-cols-8 gap-2 mb-4">
                     {[
@@ -240,8 +304,7 @@ export default function AjouterArticle() {
                 </div>
               </div>
             </CardContent>
-          </Card>
-        ) : (
+          </Card>        ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {steps[currentStep].choices?.map((choice) => (
               <Card 
@@ -288,6 +351,7 @@ export default function AjouterArticle() {
             <Button 
               className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:opacity-90 transform hover:-translate-y-1 transition-all duration-200"
               onClick={() => navigate('/recapitulatif-article', { state: { selections } })}
+              disabled={!selections.reference || selections.reference === '#'}
             >
               Terminer
             </Button>

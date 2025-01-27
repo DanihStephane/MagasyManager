@@ -2,10 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { PlusCircle, Pencil, Trash2, Home, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState , useEffect} from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search } from "lucide-react";
+import { ArrowLeft, Plus, Tag, Box, Palette, Ruler, Hash, CreditCard, Package2, FileText, Shirt } from "lucide-react";
 
 // Ajoutez cette interface pour typer les articles
 interface Article {
@@ -18,8 +19,8 @@ interface Article {
   reference?: string;
 }
 
-// Modifiez le tableau articles pour inclure les références
-const articles: Article[] = [
+// 1. Déplacer les données initiales dans une constante
+const INITIAL_ARTICLES = [
   { 
     id: 1, 
     nom: "T-shirt Premium",
@@ -111,16 +112,21 @@ const articles: Article[] = [
     image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=500"
   }
 ];
+
 const categories = [
   { id: "all", name: "Toutes les catégories" },
-  { id: "haut", name: "Hauts" },
-  { id: "bas", name: "Bas" },
-  { id: "veste", name: "Vestes & Manteaux" },
-  { id: "robe", name: "Robes" },
-  { id: "accessoire", name: "Accessoires" }
+  { id: "debardeur", name: "Débardeur" },
+  { id: "body", name: "Body" },
+  { id: "tshirt", name: "T-Shirt" },
+  { id: "manchelongue", name: "Manche longue" },
+  { id: "polo", name: "Polo" },
+  { id: "chemise", name: "Chemise" },
+  { id: "bouson", name: "Bouson" },
+  { id: "short", name: "Short" }
 ];
-
 export default function Enregistrement() {
+  // 2. Déplacer le useState à l'intérieur du composant
+  const [articles, setArticles] = useState<Article[]>(INITIAL_ARTICLES);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
@@ -151,6 +157,14 @@ export default function Enregistrement() {
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
+
+  // Add this at the beginning of the component
+    useEffect(() => {
+      const savedArticles = localStorage.getItem('articles');
+      if (savedArticles) {
+        setArticles(JSON.parse(savedArticles));
+      }
+    }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-400/30 via-purple-400/30 to-blue-400/30 flex flex-col">
@@ -225,14 +239,31 @@ export default function Enregistrement() {
                   />
                   <div>
                     <h3 className="font-semibold text-lg bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
-                      {article.nom}
+                      {article.nom.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
                     </h3>
+                                      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                                        <Palette className="w-4 h-4 text-pink-500" />
+                                        <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
+    Couleur :
+  </span>
+                                        <div 
+                                          className="w-4 h-4 rounded-full border-2 border-white shadow-sm" 
+                                          style={{ backgroundColor: article.couleur }}
+                                        />
+                                      </div>
                     <p className="text-gray-600 dark:text-gray-300">
                       Prix: {article.prix.toLocaleString()} Ar | Stock: {article.stock} unités
                     </p>
-                    <p className="text-sm mt-1 text-pink-500">
-                      Catégorie: {categories.find(cat => cat.id === article.categorie)?.name}
-                    </p>
+                    <div className="flex items-center gap-2 mt-1">
+  <Tag className="w-4 h-4 text-pink-500" />
+  <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
+    Classe :
+  </span>
+  <span className="text-sm px-2 py-1 rounded-full bg-pink-100 dark:bg-pink-900 text-pink-600 dark:text-pink-300 font-medium">
+    {categories.find(cat => cat.id === article.categorie)?.name}
+  </span>
+</div>
+
                   </div>
                 </div>
                 <div className="flex flex-col items-end gap-4">
@@ -305,3 +336,7 @@ export default function Enregistrement() {
     </div>
   );
 }
+
+
+
+
