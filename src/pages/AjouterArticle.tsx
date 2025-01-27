@@ -69,12 +69,36 @@ export default function AjouterArticle() {
     {
       title: "Motif",
       choices: [
-        { id: "uni", name: "Uni", imageUrl: "https://images.unsplash.com/photo-1519834785169-98e3b62aa993?q=80" },
-        { id: "fleuri", name: "Fleuri", imageUrl: "https://images.unsplash.com/photo-1598644035907-022f64cd38f0?q=80" },
-        { id: "devale", name: "Dévalé", imageUrl: "https://images.unsplash.com/photo-1596524430615-2a20e9a636a7?q=80" },
-        { id: "arcenciel", name: "Arc-en-ciel", imageUrl: "https://images.unsplash.com/photo-1523307730141-6d67991c4224?q=80" },
-        { id: "raye", name: "Rayé", imageUrl: "https://images.unsplash.com/photo-1605518219434-74b19224d2f4?q=80" },
-        { id: "marque", name: "Marque", imageUrl: "https://images.unsplash.com/photo-1610130395974-b8a56f9f5d91?q=80" }
+        { 
+          id: "uni", 
+          name: "Uni", 
+          imageUrl: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80" 
+        },
+        { 
+          id: "fleuri", 
+          name: "Fleuri", 
+          imageUrl: "https://images.unsplash.com/photo-1530906622963-8f99cc1a4d0b?q=80"
+        },
+        { 
+          id: "devale", 
+          name: "Dévalé", 
+          imageUrl: "https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?q=80"
+        },
+        { 
+          id: "arcenciel", 
+          name: "Arc-en-ciel", 
+          imageUrl: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80"
+        },
+        { 
+          id: "raye", 
+          name: "Rayé", 
+          imageUrl: "https://images.unsplash.com/photo-1544365558-35aa4afcf11f?q=80"
+        },
+        { 
+          id: "marque", 
+          name: "Marque", 
+          imageUrl: "https://images.unsplash.com/photo-1561997968-aa846c2bf255?q=80"
+        }
       ]
     },
     {
@@ -97,43 +121,75 @@ export default function AjouterArticle() {
     }
   ];
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/20 via-background to-secondary/20 p-8">
-      <div className="max-w-6xl mx-auto">
-        {/* Header avec stepper */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
-              {steps[currentStep].title}
-            </h1>
-            <Button asChild variant="ghost">
-              <Link to="/enregistrement">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Retour
-              </Link>
-            </Button>
-          </div>
-          
-          {/* Stepper indicators */}
-          <div className="flex justify-between mt-8">
-            {steps.map((step, index) => (
-              <div key={index} className="flex items-center">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center
-                  ${index === currentStep ? 'bg-primary text-white' : 
-                    index < currentStep ? 'bg-green-500 text-white' : 'bg-gray-200'}`}>
-                  {index < currentStep ? <Check className="w-4 h-4" /> : index + 1}
-                </div>
-                {index < steps.length - 1 && (
-                  <div className={`h-1 w-24 ${index < currentStep ? 'bg-green-500' : 'bg-gray-200'}`} />
-                )}
-              </div>
-            ))}
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-pink-400/30 via-purple-400/30 to-blue-400/30 flex flex-col">
+    <div className="absolute inset-0 bg-[url('/candy-pattern.png')] opacity-5 -z-[1]" />
+    <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b-2 border-pink-300/50 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
+          Ajouter un Article
+        </h1>
+        <div className="flex gap-4">
+          <Button asChild variant="ghost" className="hover:bg-pink-100 dark:hover:bg-pink-900">
+            <Link to="/">
+              <Home className="mr-2 h-4 w-4" />
+              Accueil
+            </Link>
+          </Button>
+        </div>
+      </div>
+    </header>
+
+
+    <div className="w-full max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 flex-grow">
+      {/* Header with stepper */}
+      <div className="mb-8 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-6 border-2 border-pink-200/50 dark:border-purple-700/50">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
+            {steps[currentStep].title}
+          </h1>
+          <Button asChild variant="ghost" className="hover:bg-pink-100 dark:hover:bg-pink-900">
+            <Link to="/enregistrement">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Retour
+            </Link>
+          </Button>
         </div>
 
-        {/* Content */}
-        {currentStep === 5 ? (
-          <Card className="w-full">
-            <CardContent className="p-6">
+        {/* Update stepper indicators */}
+        <div className="flex justify-between mt-8 relative">
+          {/* Lignes de connexion en arrière-plan */}
+          <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 -translate-y-1/2" />
+          <div 
+            className="absolute top-1/2 left-0 h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 -translate-y-1/2 transition-all duration-500"
+            style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
+          />
+          
+          {/* Points du stepper */}
+          {steps.map((step, index) => (
+            <div key={index} className="z-10">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300
+                ${index === currentStep 
+                  ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white scale-110 shadow-lg' 
+                  : index < currentStep 
+                    ? 'bg-gradient-to-r from-green-400 to-green-500 text-white' 
+                    : 'bg-white border-2 border-gray-200'
+                }`}>
+                {index < currentStep ? (
+                  <Check className="w-5 h-5" />
+                ) : (
+                  <span className="font-medium">{index + 1}</span>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+      </div>
+
+      {/* Content */}
+      {currentStep === 5 ? (
+        <Card className="w-full">
+          <CardContent className="p-6">
               <div className="space-y-4">
                 <div>
                   <label className="text-sm font-medium">Taille</label>
@@ -186,32 +242,32 @@ export default function AjouterArticle() {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {steps[currentStep].choices?.map((choice) => (
               <Card 
                 key={choice.id}
-                className={`cursor-pointer transition-all hover:scale-105
-                  ${selections[steps[currentStep].title.toLowerCase()] === choice.id ? 'ring-2 ring-primary' : ''}`}
+                className={`cursor-pointer hover:scale-105 group relative overflow-hidden rounded-2xl 
+                  border-2 border-pink-200/50 dark:border-purple-700/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl 
+                  hover:shadow-xl hover:shadow-pink-500/20 duration-300
+                  ${selections[steps[currentStep].title.toLowerCase()] === choice.id ? 'ring-2 ring-pink-500' : ''}`}
                 onClick={() => {
-                  // Mettre à jour la sélection
                   setSelections({
                     ...selections,
                     [steps[currentStep].title.toLowerCase()]: choice.id
                   });
-                  
-                  // Passer automatiquement à l'étape suivante si ce n'est pas la dernière étape
                   if (currentStep < steps.length - 1) {
                     setCurrentStep(prev => prev + 1);
                   }
                 }}
               >
+                <div className="absolute inset-0 bg-gradient-to-r from-pink-400/10 via-purple-400/10 to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <CardContent className="p-4">
                   <img 
                     src={choice.imageUrl} 
                     alt={choice.name}
-                    className="w-full h-48 object-cover rounded-lg mb-2"
+                    className="w-full h-48 object-cover rounded-lg mb-2 group-hover:scale-105 duration-300"
                   />
-                  <p className="text-center font-medium">{choice.name}</p>
+                  <p className="text-center font-medium bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">{choice.name}</p>
                 </CardContent>
               </Card>
             ))}
@@ -221,20 +277,23 @@ export default function AjouterArticle() {
         <div className="flex justify-between mt-8">
           <Button
             variant="outline"
+            className="border-pink-200/50 hover:bg-pink-100 dark:hover:bg-pink-900"
             onClick={() => setCurrentStep(prev => prev - 1)}
             disabled={currentStep === 0}
           >
             Précédent
           </Button>
+      
           {currentStep === steps.length - 1 ? (
             <Button 
-              className="bg-gradient-to-r from-primary to-secondary"
+              className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:opacity-90 transform hover:-translate-y-1 transition-all duration-200"
               onClick={() => navigate('/recapitulatif-article', { state: { selections } })}
             >
               Terminer
             </Button>
           ) : (
             <Button
+              className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:opacity-90"
               onClick={() => setCurrentStep(prev => prev + 1)}
               disabled={!selections[steps[currentStep].title.toLowerCase()]}
             >
@@ -283,7 +342,7 @@ export default function AjouterArticle() {
                     if (key === 'image') return null
                     const step = steps.find(s => s.title.toLowerCase() === key)
                     const choice = step?.choices?.find(c => c.id === value)
-                    
+                
                     return (
                       <div key={key} className="flex items-center">
                         <span className="font-medium capitalize w-24">{key}:</span>
@@ -306,9 +365,16 @@ export default function AjouterArticle() {
             </CardContent>
           </Card>
         )}
+        
       </div>
-    </div>
-  );
-}
+        <footer className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t-2 border-pink-300/50">
+          <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+            <p className="text-center text-sm text-gray-600 dark:text-gray-300">
+              © {new Date().getFullYear()} MagasyManager. Tous droits réservés.
+            </p>
+          </div>
+        </footer>
 
+    </div>
+  )}
 

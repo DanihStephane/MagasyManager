@@ -179,24 +179,25 @@ export default function Enregistrement() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 flex-grow">
-        {/* Barre de recherche et filtre modernisés */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="relative col-span-3">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
-            <Input
-              type="search"
-              placeholder="Rechercher un article par nom..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 h-12 text-lg border-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-xl"
-            />
-          </div>
+      <div className="w-full max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 flex-grow">
+        {/* Search bar and filter section */}
+        <div className="mb-8 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-6 border-2 border-pink-200/50 dark:border-purple-700/50">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="relative col-span-3">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
+              <Input
+                type="search"
+                placeholder="Rechercher un article par nom..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 h-12 text-lg border-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-xl"
+              />
+            </div>
           
-          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-full h-12 text-lg border-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-xl">
-              <SelectValue placeholder="Filtrer par catégorie" />
-            </SelectTrigger>
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-full h-12 text-lg border-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-xl">
+                <SelectValue placeholder="Filtrer par catégorie" />
+              </SelectTrigger>
             <SelectContent className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl">
               {categories.map((category) => (
                 <SelectItem 
@@ -212,7 +213,7 @@ export default function Enregistrement() {
         </div>
 
         {/* Liste des articles avec design moderne */}
-        <div className="grid gap-4">
+        <div className="grid gap-4 mt-8">
           {currentArticles.map((article) => (
             <Card key={article.id} className="group bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-2 border-pink-200/50 dark:border-purple-700/50 hover:shadow-xl hover:shadow-pink-500/20 transition-all duration-300">
               <CardContent className="flex items-center justify-between p-6">
@@ -290,7 +291,8 @@ export default function Enregistrement() {
             <ChevronRight className="h-5 w-5" />
           </Button>
         </div>
-      </main>
+      </div>
+      </div>
 
       {/* Footer moderne */}
       <footer className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t-2 border-pink-300/50">
