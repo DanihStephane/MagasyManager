@@ -158,36 +158,39 @@ export function GraphStats() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/20 via-background to-secondary/20 p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
-            Statistiques en Graphiques
-          </h1>
-          <div className="flex gap-4">
-            <Button asChild variant="outline" className="bg-background/60 backdrop-blur-xl">
-              <Link to="/statistique">
-                <Calendar className="mr-2 h-4 w-4" />
-                Récapitulation Journalière
-              </Link>
-            </Button>
-            
-            {/* Nouveau bouton */}
-            <Button asChild variant="outline" className="bg-background/60 backdrop-blur-xl">
-              <Link to="/product-check">
-                <BarChart2 className="mr-2 h-4 w-4" />
-                Check nombre de produit disponible
-              </Link>
-            </Button>
-            
-            <Button asChild variant="ghost">
-              <Link to="/">
-                <Home className="mr-2 h-4 w-4" />
-                Accueil
-              </Link>
-            </Button>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-pink-400/30 via-purple-400/30 to-blue-400/30 flex flex-col">
+    <div className="absolute inset-0 bg-[url('/candy-pattern.png')] opacity-5 -z-[1]" />
+    
+    {/* Header moderne */}
+    <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b-2 border-pink-300/50 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
+          Statistiques en Graphiques
+        </h1>
+        <div className="flex gap-4">
+          <Button asChild variant="outline" className="hover:bg-pink-100 dark:hover:bg-pink-900">
+            <Link to="/statistique">
+              <Calendar className="mr-2 h-4 w-4" />
+              Récapitulation Journalière
+            </Link>
+          </Button>
+          <Button asChild variant="outline" className="hover:bg-pink-100 dark:hover:bg-pink-900">
+            <Link to="/product-check">
+              <BarChart2 className="mr-2 h-4 w-4" />
+              Check nombre de produit disponible
+            </Link>
+          </Button>
+          <Button asChild variant="ghost" className="hover:bg-pink-100 dark:hover:bg-pink-900">
+            <Link to="/">
+              <Home className="mr-2 h-4 w-4" />
+              Accueil
+            </Link>
+          </Button>
         </div>
+      </div>
+    </header>
+
+    <div className="w-full max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 flex-grow">
         <Card className="bg-background/60 backdrop-blur-xl">
           <CardHeader>
             <div className="flex justify-between items-center">
@@ -260,6 +263,14 @@ export function GraphStats() {
             </div>          </CardContent>
         </Card>
       </div>
+      {/* Footer moderne */}
+    <footer className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t-2 border-pink-300/50">
+      <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+        <p className="text-center text-sm text-gray-600 dark:text-gray-300">
+          © {new Date().getFullYear()} MagasyManager. Tous droits réservés.
+        </p>
+      </div>
+    </footer>
     </div>
   )
 }

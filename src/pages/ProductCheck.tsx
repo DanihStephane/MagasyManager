@@ -113,34 +113,94 @@ export function ProductCheck() {
   )
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/20 via-background to-secondary/20 p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
-            Vérification des Produits
-          </h1>
-          <div className="flex gap-4">
-            <Button asChild variant="outline" className="bg-background/60 backdrop-blur-xl">
-              <Link to="/statistique">
-                <Calendar className="mr-2 h-4 w-4" />
-                Récapitulation Journalière
-              </Link>
-            </Button>
-            <Button asChild variant="outline" className="bg-background/60 backdrop-blur-xl">
-              <Link to="/graph-stats">
-                <BarChart className="mr-2 h-4 w-4" />
-                Statistique en graphique
-              </Link>
-            </Button>
-            <Button asChild variant="ghost">
-              <Link to="/">
-                <Home className="mr-2 h-4 w-4" />
-                Accueil
-              </Link>
-            </Button>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-pink-400/30 via-purple-400/30 to-blue-400/30 flex flex-col">
+    <div className="absolute inset-0 bg-[url('/candy-pattern.png')] opacity-5 -z-[1]" />
+    
+    {/* Header moderne */}
+    <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b-2 border-pink-300/50 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
+          Vérification des Produits
+        </h1>
+        <div className="flex gap-4">
+          <Button asChild variant="outline" className="hover:bg-pink-100 dark:hover:bg-pink-900">
+            <Link to="/statistique">
+              <Calendar className="mr-2 h-4 w-4" />
+              Récapitulation Journalière
+            </Link>
+          </Button>
+          <Button asChild variant="outline" className="hover:bg-pink-100 dark:hover:bg-pink-900">
+            <Link to="/graph-stats">
+              <BarChart className="mr-2 h-4 w-4" />
+              Statistique en graphique
+            </Link>
+          </Button>
+          <Button asChild variant="ghost" className="hover:bg-pink-100 dark:hover:bg-pink-900">
+            <Link to="/">
+              <Home className="mr-2 h-4 w-4" />
+              Accueil
+            </Link>
+          </Button>
         </div>
+      </div>
+    </header>
+
+
+    <div className="w-full max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 flex-grow">
         <div className="grid gap-8">
+          {/* Section Dépôt Central */}
+          <Card className="bg-background/60 backdrop-blur-xl">
+            <CardHeader>
+              <div className="flex justify-between items-center">
+                <CardTitle className="flex items-center gap-2">
+                  <Package className="h-6 w-6" />
+                  Produits Dépôt Central
+                </CardTitle>
+                <Select onValueChange={setCentralFilter} defaultValue="Tous">
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Catégorie" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CATEGORIES.map(category => (
+                      <SelectItem key={category} value={category}>
+                        <div className="flex items-center gap-2">
+                          <Filter className="h-4 w-4" />
+                          {category}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredCentralProducts.map((product, index) => (
+                  <Card key={index} className="bg-background/40">
+                    <div className="aspect-video w-full overflow-hidden">
+                      <img 
+                        src={product.image} 
+                        alt={product.name}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform"
+                      />
+                    </div>
+                    <CardContent className="p-4">
+                      <div className="space-y-2">
+                        <p className="font-medium">{product.name}</p>
+                        <div className="text-sm text-muted-foreground">
+                          <p>Ref: {product.reference}</p>
+                          <p>Catégorie: {product.category}</p>
+                          <p className="font-semibold text-primary">
+                            Stock: {product.quantity}
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
           {/* Section Magasins */}
           <Card className="bg-background/60 backdrop-blur-xl">
             <CardHeader>
@@ -202,61 +262,17 @@ export function ProductCheck() {
             </CardContent>
           </Card>
 
-          {/* Section Dépôt Central */}
-          <Card className="bg-background/60 backdrop-blur-xl">
-            <CardHeader>
-              <div className="flex justify-between items-center">
-                <CardTitle className="flex items-center gap-2">
-                  <Package className="h-6 w-6" />
-                  Produits Dépôt Central
-                </CardTitle>
-                <Select onValueChange={setCentralFilter} defaultValue="Tous">
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Catégorie" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {CATEGORIES.map(category => (
-                      <SelectItem key={category} value={category}>
-                        <div className="flex items-center gap-2">
-                          <Filter className="h-4 w-4" />
-                          {category}
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredCentralProducts.map((product, index) => (
-                  <Card key={index} className="bg-background/40">
-                    <div className="aspect-video w-full overflow-hidden">
-                      <img 
-                        src={product.image} 
-                        alt={product.name}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform"
-                      />
-                    </div>
-                    <CardContent className="p-4">
-                      <div className="space-y-2">
-                        <p className="font-medium">{product.name}</p>
-                        <div className="text-sm text-muted-foreground">
-                          <p>Ref: {product.reference}</p>
-                          <p>Catégorie: {product.category}</p>
-                          <p className="font-semibold text-primary">
-                            Stock: {product.quantity}
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          
         </div>
       </div>
+      {/* Footer moderne */}
+    <footer className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t-2 border-pink-300/50">
+      <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+        <p className="text-center text-sm text-gray-600 dark:text-gray-300">
+          © {new Date().getFullYear()} MagasyManager. Tous droits réservés.
+        </p>
+      </div>
+    </footer>
     </div>
   )
 }

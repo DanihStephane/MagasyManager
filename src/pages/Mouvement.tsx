@@ -280,20 +280,25 @@ const filterItems = (items) => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/20 via-background to-secondary/20 p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
-            Mouvements de Stock
-          </h1>
-          <Button asChild variant="ghost">
-            <Link to="/">
-              <Home className="mr-2 h-4 w-4" />
-              Accueil
-            </Link>
-          </Button>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-pink-400/30 via-purple-400/30 to-blue-400/30 flex flex-col">
+    <div className="absolute inset-0 bg-[url('/candy-pattern.png')] opacity-5 -z-[1]" />
+    
+    {/* Header moderne */}
+    <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b-2 border-pink-300/50 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
+          Mouvements de Stock
+        </h1>
+        <Button asChild variant="ghost" className="hover:bg-pink-100 dark:hover:bg-pink-900">
+          <Link to="/">
+            <Home className="mr-2 h-4 w-4" />
+            Accueil
+          </Link>
+        </Button>
+      </div>
+    </header>
 
+    <div className="w-full max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 flex-grow">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
           <div className="relative col-span-3">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
@@ -376,6 +381,14 @@ const filterItems = (items) => {
           </TabsContent>
         </Tabs>
       </div>
+      {/* Footer moderne */}
+    <footer className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t-2 border-pink-300/50">
+      <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+        <p className="text-center text-sm text-gray-600 dark:text-gray-300">
+          © {new Date().getFullYear()} MagasyManager. Tous droits réservés.
+        </p>
+      </div>
+    </footer>
     </div>
   );
 }
