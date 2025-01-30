@@ -1,8 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Home, ArrowLeft, Check } from "lucide-react";
+import { Home, ArrowLeft, Check , Plus} from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Link, useNavigate } from "react-router-dom";
+import { Filter } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 import { useState } from "react";
 
 // Définition des types
@@ -124,7 +132,78 @@ export default function AjouterArticle() {
       choices: [] // Cette étape sera gérée différemment avec un input et une palette de couleurs
     }
   ];
-  return (
+
+const [predefinedSizes, setPredefinedSizes] = useState([
+  { value: "S", checked: true },
+  { value: "M", checked: true },
+  { value: "L", checked: true },
+  { value: "XL", checked: true },
+  { value: "XXL", checked: true },
+]);
+const [newSizeTemp, setNewSizeTemp] = useState('');
+
+// Add these state declarations at the top of your component
+const [predefinedPrices, setPredefinedPrices] = useState([
+  { value: 1000, checked: true },
+  { value: 2000, checked: true },
+  { value: 3000, checked: true },
+  { value: 5000, checked: true },
+  { value: 10000, checked: true },
+]);
+const [newPriceTemp, setNewPriceTemp] = useState('');
+
+const handlePriceToggle = (priceValue: number) => {
+  setPredefinedPrices(prices => prices.map(price => 
+    price.value === priceValue ? { ...price, checked: !price.checked } : price
+  ));
+};
+
+const [predefinedQuantities, setPredefinedQuantities] = useState([
+  { value: 1, checked: true },
+  { value: 2, checked: true },
+  { value: 3, checked: true },
+  { value: 5, checked: true },
+  { value: 10, checked: true },
+]);
+const [newQuantityTemp, setNewQuantityTemp] = useState('');
+
+const handleQuantityToggle = (quantityValue: number) => {
+  setPredefinedQuantities(quantities => quantities.map(qty => 
+    qty.value === quantityValue ? { ...qty, checked: !qty.checked } : qty
+  ));
+};
+
+
+// Add these state declarations
+const [predefinedColors, setPredefinedColors] = useState([
+  { value: "#000000", checked: true }, // Noir
+  { value: "#FFFFFF", checked: true }, // Blanc
+  { value: "#FF0000", checked: true }, // Rouge
+  { value: "#0000FF", checked: true }, // Bleu
+  { value: "#008000", checked: true }, // Vert
+  { value: "#FFFF00", checked: true }, // Jaune
+  { value: "#FFA500", checked: true }, // Orange
+  { value: "#800080", checked: true }, // Violet
+]);
+const [newColorTemp, setNewColorTemp] = useState('#000000');
+
+const handleColorToggle = (colorValue: string) => {
+  setPredefinedColors(colors => colors.map(color => 
+    color.value === colorValue ? { ...color, checked: !color.checked } : color
+  ));
+};
+
+
+
+const handleSizeToggle = (sizeValue: string) => {
+  setPredefinedSizes(sizes => sizes.map(size => 
+    size.value === sizeValue ? { ...size, checked: !size.checked } : size
+  ));
+};  
+
+
+
+return (
     <div className="min-h-screen bg-gradient-to-br from-pink-400/30 via-purple-400/30 to-blue-400/30 flex flex-col">
     <div className="absolute inset-0 bg-[url('/candy-pattern.png')] opacity-5 -z-[1]" />
     <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b-2 border-pink-300/50 sticky top-0 z-50">
@@ -197,9 +276,71 @@ export default function AjouterArticle() {
               <div className="space-y-4">
                 <div>
                   <label className="text-sm font-medium">Taille</label>
+                  <Accordion type="single" collapsible className="mb-6">
+                    <AccordionItem value="sizes">
+                      <AccordionTrigger className="text-primary">
+                        <div className="flex items-center gap-2">
+                          <Filter className="h-4 w-4" />
+                          Tailles prédéfinies
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <div className="grid grid-cols-2 gap-4 p-4">
+                          {predefinedSizes.map((sizeItem) => (
+                            <div key={sizeItem.value} className="flex items-center space-x-2">
+                              <Checkbox 
+                                checked={sizeItem.checked}
+                                onCheckedChange={() => handleSizeToggle(sizeItem.value)}
+                              />
+                              <label>{sizeItem.value}</label>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <div className="flex gap-2 p-4 border-t">
+                          <Input
+                            type="text"
+                            placeholder="Nouvelle taille"
+                            className="w-full"
+                            onChange={(e) => setNewSizeTemp(e.target.value)}
+                            value={newSizeTemp}
+                          />
+                          <Button 
+                            variant="outline" 
+                            className="shrink-0"
+                            onClick={() => {
+                              if (newSizeTemp.trim()) {
+                                setPredefinedSizes([...predefinedSizes, { value: newSizeTemp, checked: true }])
+                                setNewSizeTemp('')
+                              }
+                            }}
+                          >
+                            <Plus className="h-4 w-4" />
+                            Ajouter
+                          </Button>
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+
+                  <div className="grid grid-cols-3 gap-4 mb-4">
+                    {predefinedSizes
+                      .filter(size => size.checked)
+                      .map((size) => (
+                        <Button
+                          key={size.value}
+                          variant="outline"
+                          onClick={() => setSelections({...selections, pointure: size.value})}
+                          className="h-16"
+                        >
+                          {size.value}
+                        </Button>
+                      ))}
+                  </div>
+
                   <Input 
                     type="text" 
-                    placeholder="Entrez la pointure (ex: S, M, L, XL, XXL ou 38, 39, 40...)" 
+                    placeholder="Entrez la taille"
                     value={selections.pointure}
                     onChange={(e) => setSelections({...selections, pointure: e.target.value})}
                   />
@@ -235,25 +376,150 @@ export default function AjouterArticle() {
                   <p className="text-sm text-red-500 mt-1">* Champ obligatoire</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium">Prix unitaire (Ar)</label>
-                  <Input 
-                    type="number"
-                    placeholder="Entrez le prix unitaire"
-                    value={selections.prixUnitaire}
-                    onChange={(e) => setSelections({...selections, prixUnitaire: e.target.value})}
-                    min="0"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium">Quantité</label>
-                  <Input 
-                    type="number"
-                    placeholder="Entrez la quantité"
-                    value={selections.quantite}
-                    onChange={(e) => setSelections({...selections, quantite: e.target.value})}
-                    min="1"
-                  />
-                </div>
+  <label className="text-sm font-medium">Prix unitaire (Ar)</label>
+  <Accordion type="single" collapsible className="mb-6">
+    <AccordionItem value="prices">
+      <AccordionTrigger className="text-primary">
+        <div className="flex items-center gap-2">
+          <Filter className="h-4 w-4" />
+          Prix prédéfinis
+        </div>
+      </AccordionTrigger>
+      <AccordionContent>
+        <div className="grid grid-cols-2 gap-4 p-4">
+          {predefinedPrices.map((priceItem) => (
+            <div key={priceItem.value} className="flex items-center space-x-2">
+              <Checkbox 
+                checked={priceItem.checked}
+                onCheckedChange={() => handlePriceToggle(priceItem.value)}
+              />
+              <label>{priceItem.value.toLocaleString()} Ar</label>
+            </div>
+          ))}
+        </div>
+        
+        <div className="flex gap-2 p-4 border-t">
+          <Input
+            type="number"
+            placeholder="Nouveau prix"
+            className="w-full"
+            onChange={(e) => setNewPriceTemp(e.target.value)}
+            value={newPriceTemp}
+          />
+          <Button 
+            variant="outline" 
+            className="shrink-0"
+            onClick={() => {
+              const newPrice = Number(newPriceTemp);
+              if (newPrice > 0) {
+                setPredefinedPrices([...predefinedPrices, { value: newPrice, checked: true }]);
+                setNewPriceTemp('');
+              }
+            }}
+          >
+            <Plus className="h-4 w-4" />
+            Ajouter
+          </Button>
+        </div>
+      </AccordionContent>
+    </AccordionItem>
+  </Accordion>
+
+  <div className="grid grid-cols-3 gap-4 mb-4">
+    {predefinedPrices
+      .filter(price => price.checked)
+      .map((price) => (
+        <Button
+          key={price.value}
+          variant="outline"
+          onClick={() => setSelections({...selections, prixUnitaire: price.value.toString()})}
+          className="h-16"
+        >
+          {price.value.toLocaleString()} Ar
+        </Button>
+      ))}
+  </div>
+
+  <Input 
+    type="number"
+    placeholder="Entrez le prix unitaire"
+    value={selections.prixUnitaire}
+    onChange={(e) => setSelections({...selections, prixUnitaire: e.target.value})}
+  />
+</div>
+<div>
+  <label className="text-sm font-medium">Quantité</label>
+  <Accordion type="single" collapsible className="mb-6">
+    <AccordionItem value="quantities">
+      <AccordionTrigger className="text-primary">
+        <div className="flex items-center gap-2">
+          <Filter className="h-4 w-4" />
+          Quantités prédéfinies
+        </div>
+      </AccordionTrigger>
+      <AccordionContent>
+        <div className="grid grid-cols-2 gap-4 p-4">
+          {predefinedQuantities.map((quantityItem) => (
+            <div key={quantityItem.value} className="flex items-center space-x-2">
+              <Checkbox 
+                checked={quantityItem.checked}
+                onCheckedChange={() => handleQuantityToggle(quantityItem.value)}
+              />
+              <label>{quantityItem.value}</label>
+            </div>
+          ))}
+        </div>
+        
+        <div className="flex gap-2 p-4 border-t">
+          <Input
+            type="number"
+            placeholder="Nouvelle quantité"
+            className="w-full"
+            onChange={(e) => setNewQuantityTemp(e.target.value)}
+            value={newQuantityTemp}
+          />
+          <Button 
+            variant="outline" 
+            className="shrink-0"
+            onClick={() => {
+              const newQuantity = Number(newQuantityTemp);
+              if (newQuantity > 0) {
+                setPredefinedQuantities([...predefinedQuantities, { value: newQuantity, checked: true }]);
+                setNewQuantityTemp('');
+              }
+            }}
+          >
+            <Plus className="h-4 w-4" />
+            Ajouter
+          </Button>
+        </div>
+      </AccordionContent>
+    </AccordionItem>
+  </Accordion>
+
+  <div className="grid grid-cols-3 gap-4 mb-4">
+    {predefinedQuantities
+      .filter(qty => qty.checked)
+      .map((qty) => (
+        <Button
+          key={qty.value}
+          variant="outline"
+          onClick={() => setSelections({...selections, quantite: qty.value.toString()})}
+          className="h-16"
+        >
+          {qty.value}
+        </Button>
+      ))}
+  </div>
+
+  <Input 
+    type="number"
+    placeholder="Entrez la quantité"
+    value={selections.quantite}
+    onChange={(e) => setSelections({...selections, quantite: e.target.value})}
+    min="1"
+  />
+</div>
                 <div>
                   <label className="text-sm font-medium">Description</label>
                   <textarea
@@ -265,43 +531,85 @@ export default function AjouterArticle() {
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-medium">Couleur</label>
-                  <div className="grid grid-cols-8 gap-2 mb-4">
-                    {[
-                      "#000000", // Noir
-                      "#FFFFFF", // Blanc
-                      "#FF0000", // Rouge
-                      "#0000FF", // Bleu
-                      "#008000", // Vert
-                      "#FFFF00", // Jaune
-                      "#FFA500", // Orange
-                      "#800080", // Violet
-                      "#FFC0CB", // Rose
-                      "#A52A2A", // Marron
-                      "#808080", // Gris
-                      "#FFD700", // Or
-                      "#C0C0C0", // Argent
-                      "#000080", // Bleu marine
-                      "#8B4513", // Marron foncé
-                      "#4B0082", // Indigo
-                    ].map((color) => (
-                      <div
-                        key={color}
-                        className={`w-8 h-8 rounded-full cursor-pointer border-2 ${
-                          selections.couleur === color ? 'border-primary' : 'border-transparent'
-                        }`}
-                        style={{ backgroundColor: color }}
-                        onClick={() => setSelections({ ...selections, couleur: color })}
-                      />
-                    ))}
-                  </div>
-                  <input
-                    type="color"
-                    className="w-full h-10 rounded-md cursor-pointer"
-                    value={selections.couleur}
-                    onChange={(e) => setSelections({...selections, couleur: e.target.value})}
-                  />
-                </div>
+  <label className="text-sm font-medium">Couleur</label>
+  <Accordion type="single" collapsible className="mb-6">
+    <AccordionItem value="colors">
+      <AccordionTrigger className="text-primary">
+        <div className="flex items-center gap-2">
+          <Filter className="h-4 w-4" />
+          Couleurs prédéfinies
+        </div>
+      </AccordionTrigger>
+      <AccordionContent>
+        <div className="grid grid-cols-2 gap-4 p-4">
+          {predefinedColors.map((colorItem) => (
+            <div key={colorItem.value} className="flex items-center space-x-2">
+              <Checkbox 
+                checked={colorItem.checked}
+                onCheckedChange={() => handleColorToggle(colorItem.value)}
+              />
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-6 h-6 rounded-full border"
+                  style={{ backgroundColor: colorItem.value }}
+                />
+                <label>{colorItem.value}</label>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        <div className="flex gap-2 p-4 border-t">
+          <input
+            type="color"
+            className="w-full h-10 rounded-md cursor-pointer"
+            value={newColorTemp}
+            onChange={(e) => setNewColorTemp(e.target.value)}
+          />
+          <Button 
+            variant="outline" 
+            className="shrink-0"
+            onClick={() => {
+              if (newColorTemp) {
+                setPredefinedColors([...predefinedColors, { value: newColorTemp, checked: true }]);
+                setNewColorTemp('#000000');
+              }
+            }}
+          >
+            <Plus className="h-4 w-4" />
+            Ajouter
+          </Button>
+        </div>
+      </AccordionContent>
+    </AccordionItem>
+  </Accordion>
+
+  <div className="grid grid-cols-4 gap-4 mb-4">
+    {predefinedColors
+      .filter(color => color.checked)
+      .map((color) => (
+        <Button
+          key={color.value}
+          variant="outline"
+          onClick={() => setSelections({...selections, couleur: color.value})}
+          className="h-16 flex items-center justify-center gap-2"
+        >
+          <div 
+            className="w-6 h-6 rounded-full border"
+            style={{ backgroundColor: color.value }}
+          />
+          {color.value}
+        </Button>
+      ))}
+  </div>
+
+  <input
+    type="color"
+    className="w-full h-10 rounded-md cursor-pointer"
+    value={selections.couleur}
+    onChange={(e) => setSelections({...selections, couleur: e.target.value})}
+  />
+</div>
               </div>
             </CardContent>
           </Card>        ) : (
