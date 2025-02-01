@@ -4,7 +4,16 @@ import { Input } from "@/components/ui/input";
 import { Home, ArrowLeft, Check , Plus} from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Link, useNavigate } from "react-router-dom";
-import { Filter } from "lucide-react";
+import { 
+  Filter,
+  PlusCircle,
+  Ruler,
+  Hash,
+  DollarSign,
+  Palette,
+  FileText,
+  Package,
+} from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -16,6 +25,7 @@ import { useState } from "react";
 // Définition des types
 type Step = {
   title: string;
+  emoji: string;
   choices?: Choice[];
 };
 
@@ -45,90 +55,96 @@ export default function AjouterArticle() {
   const navigate = useNavigate();
   const steps: Step[] = [
     {
+      emoji:"⚧️",
       title: "Genre",
       choices: [
-        { id: "homme", name: "Hommes", imageUrl: "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?q=80" },
-        { id: "femme", name: "Femmes", imageUrl: "https://images.unsplash.com/photo-1617551307353-1185d5efe9e1?q=80" },
-        { id: "garcon", name: "Garçons", imageUrl: "https://images.unsplash.com/photo-1555009393-f20bdb245c4d?q=80" },
-        { id: "fille", name: "Filles", imageUrl: "https://images.unsplash.com/photo-1621452773781-0f992fd1f5cb?q=80" }
+        { id: "homme", name: "Hommes", imageUrl: "/images/homme.jpg" },
+        { id: "femme", name: "Femmes", imageUrl: "/images/femme.jpg" },
+        { id: "garcon", name: "Garçons", imageUrl: "/images/garcon.jpg" },
+        { id: "fille", name: "Filles", imageUrl: "/images/fille.jpg" },
       ]
     },
     {
+      emoji:"📙",
       title: "Classe",
       choices: [
-        { id: "debardeur", name: "Débardeur", imageUrl: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80" },
-        { id: "body", name: "Body", imageUrl: "https://images.unsplash.com/photo-1525507707867-d09247ed719c?q=80" },
-        { id: "tshirt", name: "T-Shirt", imageUrl: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80" },
-        { id: "manchelongue", name: "Manche longue", imageUrl: "https://images.unsplash.com/photo-1602810316693-0a5c00b04882?q=80" },
-        { id: "polo", name: "Polo", imageUrl: "https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?q=80" },
-        { id: "chemise", name: "Chemise", imageUrl: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80" },
-        { id: "bouson", name: "Bouson", imageUrl: "https://images.unsplash.com/photo-1615210146789-d27c7f1cb7aa?q=80" },
-        { id: "short", name: "Short", imageUrl: "https://images.unsplash.com/photo-1622879498438-c1cdfa16c5be?q=80" }
+        { id: "debardeur", name: "Débardeur", imageUrl: "/images/debardeur.jpg"  },
+        { id: "body", name: "Body", imageUrl:"/images/body.jpg" },
+        { id: "tshirt", name: "T-Shirt", imageUrl: "/images/tshirt.jpg"  },
+        { id: "manchelongue", name: "Manche longue", imageUrl: "/images/manches-longues.jpg"  },
+        { id: "polo", name: "Polo", imageUrl: "/images/polo.jpg"  },
+        { id: "chemise", name: "Chemise", imageUrl: "/images/chemise.jpg"  },
+        { id: "bouson", name: "Bouson", imageUrl: "/images/blouson.jpg"  },
+        { id: "short", name: "Short", imageUrl: "/images/short.jpg" }
       ]
     },
     {
+      emoji:"🧵",
       title: "Matiere",
       choices: [
-        { id: "cotton", name: "Cotton", imageUrl: "https://images.unsplash.com/photo-1585537249610-42b01a1faa72?q=80" },
-        { id: "lin", name: "Lin", imageUrl: "https://images.unsplash.com/photo-1595475207225-428b62bda831?q=80" },
-        { id: "jeans", name: "Jeans", imageUrl: "https://images.unsplash.com/photo-1624378439575-d8a75b4d9718?q=80" },
-        { id: "nilon", name: "Nilon", imageUrl: "https://images.unsplash.com/photo-1516961642265-531546e84af2?q=80" },
-        { id: "filet", name: "Filet", imageUrl: "https://images.unsplash.com/photo-1583336526884-e60c41c8c036?q=80" },
-        { id: "fibrane", name: "Fibrane", imageUrl: "https://images.unsplash.com/photo-1611048267937-5d88c5d59d00?q=80" },
-        { id: "3d", name: "3D", imageUrl: "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80" }
+        { id: "cotton", name: "Cotton", imageUrl: "/images/matieres/coton.jpg" },
+        { id: "lin", name: "Lin", imageUrl: "/images/matieres/lin.jpg" },
+        { id: "jeans", name: "Jeans", imageUrl: "/images/matieres/jeans.jpg" },
+        { id: "nilon", name: "Nilon", imageUrl: "/images/matieres/nilon.jpg" },
+        { id: "filet", name: "Filet", imageUrl: "/images/matieres/filet.jpg" },
+        { id: "fibrane", name: "Fibrane", imageUrl: "/images/matieres/fibrane.jpg" },
+        { id: "3d", name: "3D", imageUrl: "/images/matieres/3d.jpg" }
       ]
     },
     {
+      emoji: "❤️",
       title: "Motif",
       choices: [
         { 
           id: "uni", 
           name: "Uni", 
-          imageUrl: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80" 
+          imageUrl: "/images/motif/uni.jpg" 
         },
         { 
           id: "fleuri", 
           name: "Fleuri", 
-          imageUrl: "https://images.unsplash.com/photo-1530906622963-8f99cc1a4d0b?q=80"
+          imageUrl: "/images/motif/fleuri.jpg"
         },
         { 
           id: "devale", 
           name: "Dévalé", 
-          imageUrl: "https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?q=80"
+          imageUrl: "/images/motif/devale.jpg"
         },
         { 
           id: "arcenciel", 
           name: "Arc-en-ciel", 
-          imageUrl: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80"
+          imageUrl: "/images/motif/arcenciel.jpg"
         },
         { 
           id: "raye", 
           name: "Rayé", 
-          imageUrl: "https://images.unsplash.com/photo-1544365558-35aa4afcf11f?q=80"
+          imageUrl: "/images/motif/raye.jpg"
         },
         { 
           id: "marque", 
           name: "Marque", 
-          imageUrl: "https://images.unsplash.com/photo-1561997968-aa846c2bf255?q=80"
+          imageUrl: "/images/motif/marque.jpg"
         }
       ]
     },
     {
+      emoji: "🖌️", 
       title: "Dessin",
       choices: [
-        { id: "personne", name: "Personne", imageUrl: "https://images.unsplash.com/photo-1610208601852-vb6fc24d5806?q=80" },
-        { id: "animal", name: "Animal", imageUrl: "https://images.unsplash.com/photo-1551717743-49959800b553?q=80" },
-        { id: "paysage", name: "Paysage", imageUrl: "https://images.unsplash.com/photo-1469098902551-02f5d0b7a405?q=80" },
-        { id: "fleur", name: "Fleur", imageUrl: "https://images.unsplash.com/photo-1529176130524-dab10bdfb144?q=80" },
-        { id: "abstrait", name: "Abstrait", imageUrl: "https://images.unsplash.com/photo-1573348817102-5bb07c0d3d75?q=80" },
-        { id: "chiffre", name: "Chiffre", imageUrl: "https://images.unsplash.com/photo-1590336979570-8dff66f28730?q=80" },
-        { id: "vehicule", name: "Véhicule", imageUrl: "https://images.unsplash.com/photo-1502877338535-766e1452684a?q=80" },
-        { id: "marque", name: "Marque", imageUrl: "https://images.unsplash.com/photo-1622462449267-1a5d7dda38c0?q=80" },
-        { id: "rien", name: "Rien", imageUrl: "https://images.unsplash.com/photo-1595114501840-2d1e93073232?q=80" }
+        { id: "personne", name: "Personne", imageUrl: "/images/dessin/personne.jpg" },
+        { id: "animal", name: "Animal", imageUrl: "/images/dessin/animal.jpg"},
+        { id: "paysage", name: "Paysage", imageUrl: "/images/dessin/paysage.jpg" },
+        { id: "fleur", name: "Fleur", imageUrl: "/images/dessin/fleur.jpg" },
+        { id: "abstrait", name: "Abstrait", imageUrl: "/images/dessin/abstrait.jpg" },
+        { id: "chiffre", name: "Chiffre", imageUrl: "/images/dessin/chiffre.jpg" },
+        { id: "vehicule", name: "Véhicule", imageUrl: "/images/dessin/vehicule.jpg" },
+        { id: "marque", name: "Marque", imageUrl: "/images/dessin/marque.jpg" },
+        { id: "rien", name: "Rien", imageUrl: "/images/dessin/rien.jpg" }
       ]
     },
     {
-      title: "Pointures",
+      emoji: "📝",
+      title: "Détail et siganture",
       choices: [] // Cette étape sera gérée différemment avec un input et une palette de couleurs
     }
   ];
@@ -205,19 +221,46 @@ const handleSizeToggle = (sizeValue: string) => {
 
 return (
     <div className="min-h-screen bg-gradient-to-br from-pink-400/30 via-purple-400/30 to-blue-400/30 flex flex-col">
-    <div className="absolute inset-0 bg-[url('/candy-pattern.png')] opacity-5 -z-[1]" />
+     <div className="absolute inset-0 bg-[url('https://st4.depositphotos.com/1076214/20486/i/1600/depositphotos_204867158-stock-photo-interior-fashion-clothing-store-women.jpg')] bg-cover bg-center bg-no-repeat opacity-50 -z-[1]" />
     <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b-2 border-pink-300/50 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
-          Ajouter un Article
-        </h1>
+      <div className="flex items-center gap-2">
+  <PlusCircle className="h-8 w-8 text-pink-500 animate-bounce" />
+  <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
+    Ajouter un Article
+  </h1>
+</div>
+
         <div className="flex gap-4">
-          <Button asChild variant="ghost" className="hover:bg-pink-100 dark:hover:bg-pink-900">
-            <Link to="/">
-              <Home className="mr-2 h-4 w-4" />
-              Accueil
-            </Link>
-          </Button>
+
+
+<Button 
+  asChild 
+  variant="ghost" 
+  className="relative overflow-hidden transition-all duration-300 hover:bg-gradient-to-r hover:from-pink-700/30 hover:to-purple-900/30 dark:hover:from-pink-950 dark:hover:to-purple-950 rounded-xl border border-pink-300/50 dark:border-purple-800/50 shadow-lg group"
+>
+  <Link to="/enregistrement" className="flex items-center px-4 py-2 font-medium">
+    <ArrowLeft className="mr-2 h-5 w-5 text-pink-700 dark:text-pink-500 transition-transform group-hover:-translate-x-1" />
+    <span className="bg-gradient-to-r from-pink-700 to-purple-900 dark:from-pink-500 dark:to-purple-600 bg-clip-text text-transparent font-semibold">
+      Retour
+    </span>
+  </Link>
+</Button>
+
+
+        <Button 
+  asChild 
+  variant="ghost" 
+  className="relative overflow-hidden transition-all duration-300 hover:bg-gradient-to-r hover:from-pink-700/30 hover:to-purple-900/30 dark:hover:from-pink-950 dark:hover:to-purple-950 rounded-xl border border-pink-300/50 dark:border-purple-800/50 shadow-lg"
+>
+  <Link to="/" className="flex items-center px-4 py-2 font-medium">
+    <Home className="mr-2 h-5 w-5 text-pink-700 dark:text-pink-500 transition-transform group-hover:scale-110" />
+    <span className="bg-gradient-to-r from-pink-700 to-purple-900 dark:from-pink-500 dark:to-purple-600 bg-clip-text text-transparent font-semibold">
+      Accueil
+    </span>
+  </Link>
+</Button>
+
         </div>
       </div>
     </header>
@@ -228,14 +271,10 @@ return (
       <div className="mb-8 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-6 border-2 border-pink-200/50 dark:border-purple-700/50">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
-            {steps[currentStep].title}
+          {steps[currentStep].emoji}{steps[currentStep].title}
           </h1>
-          <Button asChild variant="ghost" className="hover:bg-pink-100 dark:hover:bg-pink-900">
-            <Link to="/enregistrement">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Retour
-            </Link>
-          </Button>
+        
+
         </div>
 
         {/* Update stepper indicators */}
@@ -275,7 +314,11 @@ return (
           <CardContent className="p-6">
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm font-medium">Taille</label>
+                  <label className="text-sm font-medium flex items-center gap-2">
+  <Ruler className="h-4 w-4 text-pink-500" />
+  <span>Taille</span>
+</label>
+
                   <Accordion type="single" collapsible className="mb-6">
                     <AccordionItem value="sizes">
                       <AccordionTrigger className="text-primary">
@@ -346,7 +389,11 @@ return (
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-medium">Numéro de référence *</label>
+                  <label className="text-sm font-medium flex items-center gap-2">
+  <Hash className="h-4 w-4 text-pink-500" />
+  <span>Numéro de référence *</span>
+</label>
+
                   <div className="relative">
                     <Input 
                       type="text" 
@@ -376,7 +423,11 @@ return (
                   <p className="text-sm text-red-500 mt-1">* Champ obligatoire</p>
                 </div>
                 <div>
-  <label className="text-sm font-medium">Prix unitaire (Ar)</label>
+                <label className="text-sm font-medium flex items-center gap-2">
+  <DollarSign className="h-4 w-4 text-pink-500" />
+  <span>Prix unitaire (Ar)</span>
+</label>
+
   <Accordion type="single" collapsible className="mb-6">
     <AccordionItem value="prices">
       <AccordionTrigger className="text-primary">
@@ -448,7 +499,11 @@ return (
   />
 </div>
 <div>
-  <label className="text-sm font-medium">Quantité</label>
+<label className="text-sm font-medium flex items-center gap-2">
+  <Package className="h-4 w-4 text-pink-500" />
+  <span>Quantité</span>
+</label>
+
   <Accordion type="single" collapsible className="mb-6">
     <AccordionItem value="quantities">
       <AccordionTrigger className="text-primary">
@@ -521,7 +576,11 @@ return (
   />
 </div>
                 <div>
-                  <label className="text-sm font-medium">Description</label>
+                <label className="text-sm font-medium flex items-center gap-2">
+  <FileText className="h-4 w-4 text-pink-500" />
+  <span>Description</span>
+</label>
+
                   <textarea
                     className="w-full p-2 border rounded-md"
                     rows={4}
@@ -531,7 +590,11 @@ return (
                   />
                 </div>
                 <div>
-  <label className="text-sm font-medium">Couleur</label>
+                <label className="text-sm font-medium flex items-center gap-2">
+  <Palette className="h-4 w-4 text-pink-500" />
+  <span>Couleur</span>
+</label>
+
   <Accordion type="single" collapsible className="mb-6">
     <AccordionItem value="colors">
       <AccordionTrigger className="text-primary">
@@ -707,33 +770,55 @@ return (
                   </div>
                 )}
               </div>
-              <div className="w-2/3 pl-6">
-                <h3 className="text-xl font-bold mb-4">Récapitulatif</h3>
-                <div className="space-y-3">
-                  {Object.entries(selections).map(([key, value]) => {
-                    if (key === 'image') return null
-                    const step = steps.find(s => s.title.toLowerCase() === key)
-                    const choice = step?.choices?.find(c => c.id === value)
-                
-                    return (
-                      <div key={key} className="flex items-center">
-                        <span className="font-medium capitalize w-24">{key}:</span>
-                        <span className="text-gray-600">
-                          {key === 'couleur' ? (
-                            <div className="flex items-center gap-2">
-                              <div 
-                                className="w-6 h-6 rounded-full" 
-                                style={{backgroundColor: value}}
-                              />
-                              {value}
-                            </div>
-                          ) : choice?.name || value}
-                        </span>
-                      </div>
-                    )
-                  })}
-                </div>
+              <div className="w-2/3 pl-8 backdrop-blur-sm">
+  <h3 className="text-2xl font-bold mb-6 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text flex items-center gap-2">
+    <FileText className="h-6 w-6 text-pink-500" />
+    Récapitulatif de l'Article
+  </h3>
+
+  <div className="space-y-4 divide-y divide-pink-100/30">
+    {Object.entries(selections).map(([key, value]) => {
+      if (key === 'image') return null;
+      const step = steps.find(s => s.title.toLowerCase() === key);
+      const choice = step?.choices?.find(c => c.id === value);
+
+      return (
+        <div 
+          key={key} 
+          className="flex items-center justify-between py-3 px-4 hover:bg-pink-50/30 rounded-lg transition-all duration-300"
+        >
+          <div className="flex items-center gap-3 group">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-pink-100 to-purple-100 flex items-center justify-center">
+              <span className="text-sm font-semibold text-pink-600 group-hover:scale-110 transition-transform">
+                {key.charAt(0).toUpperCase()}
+              </span>
+            </div>
+            <span className="text-sm text-gray-500">
+              {key.charAt(0).toUpperCase() + key.slice(1)}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {key === 'couleur' ? (
+              <div className="flex items-center gap-2 bg-white/50 px-3 py-1.5 rounded-full shadow-sm">
+                <div 
+                  className="w-6 h-6 rounded-full border-2 border-white shadow-md transition-transform hover:scale-110"
+                  style={{backgroundColor: value}}
+                />
+                <span className="font-mono text-gray-700">{value}</span>
               </div>
+            ) : (
+              <span className="bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent font-medium px-3 py-1.5 bg-white/50 rounded-full shadow-sm">
+                {choice?.name || value}
+              </span>
+            )}
+          </div>
+        </div>
+      );
+    })}
+  </div>
+</div>
+
             </CardContent>
           </Card>
         )}

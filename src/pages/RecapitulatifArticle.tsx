@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Home, Plus, Tag, Box, Palette, Ruler, Hash, CreditCard, Package2, FileText, Shirt } from "lucide-react";
+import { ArrowLeft, Home, Plus, Tag, Box, Palette, Ruler, Hash, CreditCard, Package2, FileText, Shirt, ClipboardList } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export default function RecapitulatifArticle() {
@@ -64,7 +64,7 @@ const choicesMap = {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-400/30 via-purple-400/30 to-blue-400/30 flex flex-col">
-      <div className="absolute inset-0 bg-[url('/candy-pattern.png')] opacity-5 -z-[1]" />
+       <div className="absolute inset-0 bg-[url('https://st4.depositphotos.com/1076214/20486/i/1600/depositphotos_204867158-stock-photo-interior-fashion-clothing-store-women.jpg')] bg-cover bg-center bg-no-repeat opacity-50 -z-[1]" />
       
       {/* Header moderne */}
       <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b-2 border-pink-300/50 sticky top-0 z-50">
@@ -73,12 +73,18 @@ const choicesMap = {
             Récapitulatif de l'article
           </h1>
           <div className="flex gap-4">
-            <Button asChild variant="ghost" className="hover:bg-pink-100 dark:hover:bg-pink-900">
-              <Link to="/">
-                <Home className="mr-2 h-4 w-4" />
-                Accueil
-              </Link>
-            </Button>
+          <Button 
+  asChild 
+  variant="ghost" 
+  className="relative overflow-hidden transition-all duration-300 hover:bg-gradient-to-r hover:from-pink-700/30 hover:to-purple-900/30 dark:hover:from-pink-950 dark:hover:to-purple-950 rounded-xl border border-pink-300/50 dark:border-purple-800/50 shadow-lg"
+>
+  <Link to="/" className="flex items-center px-4 py-2 font-medium">
+    <Home className="mr-2 h-5 w-5 text-pink-700 dark:text-pink-500 transition-transform group-hover:scale-110" />
+    <span className="bg-gradient-to-r from-pink-700 to-purple-900 dark:from-pink-500 dark:to-purple-600 bg-clip-text text-transparent font-semibold">
+      Accueil
+    </span>
+  </Link>
+</Button>
           </div>
 
         </div>
@@ -107,9 +113,14 @@ const choicesMap = {
 
             {/* Details Section */}
             <div className="lg:w-2/3 p-6">
-              <h3 className="text-2xl font-bold mb-6 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
-                Détails de l'article
-              </h3>
+            <div className="flex items-center gap-3 mb-6">
+  <ClipboardList className="w-8 h-8 text-pink-500" />
+  <h3 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
+    Détails de l'article
+  </h3>
+</div>
+
+
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {selections && Object.entries(selections).map(([key, value]) => {

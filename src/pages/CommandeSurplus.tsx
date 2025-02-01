@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Home, Trash2, Plus, Calculator, ArrowRight, ShoppingCart, ArrowLeft, Printer, Filter } from "lucide-react";
+import { Home, Trash2, Plus, Calculator, ArrowRight, ShoppingCart, ArrowLeft, Printer, Filter,Shirt,DollarSign, Package} from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -22,6 +22,7 @@ interface CategoryItem {
   name: string;
   image: string;
   checked: boolean;
+  price: number; // Nouveau champ
 }
 
 interface QuantityItem {
@@ -51,18 +52,18 @@ export default function CommandeSurplus() {
     { value: 10, checked: true },
   ]);
 
-  // Categories with checkboxes
-  const [categories, setCategories] = useState<CategoryItem[]>([
-    { name: "Débardeur", image: "/images/debardeur.jpg", checked: true },
-    { name: "Body", image: "/images/body.jpg", checked: true },
-    { name: "T-shirt", image: "/images/tshirt.jpg", checked: true },
-    { name: "Manche longue", image: "/images/manche-longue.jpg", checked: true },
-    { name: "Polo", image: "/images/polo.jpg", checked: true },
-    { name: "Chemise", image: "/images/chemise.jpg", checked: true },
-    { name: "Bouson", image: "/images/bouson.jpg", checked: true },
-    { name: "Short", image: "/images/short.jpg", checked: true },
-    { name: "Robe", image: "/images/robe.jpg", checked: true },
-  ]);
+ // Categories with checkboxes
+ const [categories, setCategories] = useState<CategoryItem[]>([
+  { name: "Débardeur", image: "/images/debardeur.jpg", checked: true, price: 15000 },
+  { name: "Body", image: "/images/body.jpg", checked: true, price: 20000 },
+  { name: "T-shirt", image: "/images/tshirt.jpg", checked: true, price: 25000 },
+  { name: "Manche longue", image: "/images/manches-longues.jpg", checked: true, price: 30000 },
+  { name: "Polo", image: "/images/polo.jpg", checked: true, price: 35000 },
+  { name: "Chemise", image: "/images/chemise.jpg", checked: true, price: 40000 },
+  { name: "Bouson", image: "/images/blouson.jpg", checked: true, price: 50000 },
+  { name: "Short", image: "/images/short.jpg", checked: true, price: 30000 },
+  { name: "Robe", image: "/images/robe.jpg", checked: true, price: 45000 },
+]);
 
   // Handlers
   const handleQuantityToggle = (quantityValue: number) => {
@@ -140,20 +141,26 @@ export default function CommandeSurplus() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-400/30 via-purple-400/30 to-blue-400/30 flex flex-col">
-    <div className="absolute inset-0 bg-[url('/candy-pattern.png')] opacity-5 -z-[1]" />
+      <div className="absolute inset-0 bg-[url('https://st4.depositphotos.com/1076214/20486/i/1600/depositphotos_204867158-stock-photo-interior-fashion-clothing-store-women.jpg')] bg-cover bg-center bg-no-repeat opacity-50 -z-[1]" />
     
         {/* Header moderne */}
     <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b-2 border-pink-300/50 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
-          Gestion des Surplus
+      <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text flex items-center gap-3">
+      <Package className="h-6 w-6 text-pink-500 animate-bounce" />Gestion des Surplus
         </h1>
-        <Button asChild variant="ghost" className="hover:bg-pink-100 dark:hover:bg-pink-900">
-          <Link to="/">
-            <Home className="mr-2 h-4 w-4" />
-            Accueil
-          </Link>
-        </Button>
+        <Button 
+  asChild 
+  variant="ghost" 
+  className="relative overflow-hidden transition-all duration-300 hover:bg-gradient-to-r hover:from-pink-700/30 hover:to-purple-900/30 dark:hover:from-pink-950 dark:hover:to-purple-950 rounded-xl border border-pink-300/50 dark:border-purple-800/50 shadow-lg"
+>
+  <Link to="/" className="flex items-center px-4 py-2 font-medium">
+    <Home className="mr-2 h-5 w-5 text-pink-700 dark:text-pink-500 transition-transform group-hover:scale-110" />
+    <span className="bg-gradient-to-r from-pink-700 to-purple-900 dark:from-pink-500 dark:to-purple-600 bg-clip-text text-transparent font-semibold">
+      Accueil
+    </span>
+  </Link>
+</Button>
       </div>
     </header>
     <div className="w-full max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 flex-grow">
@@ -165,13 +172,16 @@ export default function CommandeSurplus() {
               Étape 1/3 - Sélection des articles
             </span>
             <Button 
-              variant="outline"
-              onClick={() => setStep(3)}
-              className="flex items-center gap-2"
-            >
-              <Calculator className="h-4 w-4" />
-              Total
-            </Button>
+  variant="outline"
+  onClick={() => setStep(3)}
+  className="flex items-center gap-2 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white hover:opacity-90 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+>
+  <Calculator className="h-4 w-4 animate-pulse" />
+  <span className="font-semibold">Voir le Total</span>
+  <span className="px-2 py-0.5 bg-white/20 rounded-full text-sm">
+    {calculateTotalQuantity()} articles
+  </span>
+</Button>
           </div>
           <Accordion type="single" collapsible className="mb-6">
             <AccordionItem value="categories">
@@ -189,13 +199,25 @@ export default function CommandeSurplus() {
                   <CardContent className="p-4">
                     <div className="flex flex-wrap gap-4">
                       {categories.map((category) => (
-                        <div key={category.name} className="flex items-center space-x-2">
-                          <Checkbox 
-                            checked={category.checked}
-                            onCheckedChange={() => handleCategoryToggle(category.name)}
-                          />
-                          <label>{category.name}</label>
-                        </div>
+                        <div 
+                        key={category.name} 
+                        className="flex items-center p-3 rounded-lg hover:bg-primary/5 transition-all duration-300 group cursor-pointer"
+                        onClick={() => handleCategoryToggle(category.name)}
+                      >
+                        <Checkbox
+                          checked={category.checked}
+                          onCheckedChange={() => handleCategoryToggle(category.name)}
+                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                        />
+                        <label className="ml-3 font-medium text-gray-700 group-hover:text-primary transition-colors cursor-pointer flex items-center gap-2">
+                          <Shirt className="h-4 w-4 text-primary/60" />
+                          {category.name}
+                          <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary">
+                            {categories.find(cat => cat.name === category.name)?.price.toLocaleString()} Ar
+                          </span>
+                        </label>
+                      </div>
+                      
                       ))}
                     </div>
                   </CardContent>
@@ -215,6 +237,9 @@ export default function CommandeSurplus() {
                   <CardContent className="p-4">
                     <img src={category.image} alt={category.name} className="w-full h-48 object-cover rounded" />
                     <h3 className="text-center mt-2">{category.name}</h3>
+                    <p className="text-center text-sm text-muted-foreground">
+                      {category.price.toLocaleString()} Ar
+                    </p>
                   </CardContent>
                 </Card>
               ))}

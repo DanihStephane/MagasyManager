@@ -168,21 +168,35 @@ export default function Enregistrement() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-400/30 via-purple-400/30 to-blue-400/30 flex flex-col">
-      <div className="absolute inset-0 bg-[url('/candy-pattern.png')] opacity-5 -z-[1]" />
+       <div className="absolute inset-0 bg-[url('https://st4.depositphotos.com/1076214/20486/i/1600/depositphotos_204867158-stock-photo-interior-fashion-clothing-store-women.jpg')] bg-cover bg-center bg-no-repeat opacity-50 -z-[1]" />
       
       {/* Header moderne similaire à Home */}
       <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b-2 border-pink-300/50 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
-            Gestion des Articles
-          </h1>
+
+          
+        <div className="flex items-center gap-3">
+  <Package2 className="h-8 w-8 text-pink-500 animate-bounce" />
+  <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
+    Gestion des Articles
+  </h1>
+</div>
+
           <div className="flex gap-4">
-            <Button asChild variant="ghost" className="hover:bg-pink-100 dark:hover:bg-pink-900">
-              <Link to="/">
-                <Home className="mr-2 h-4 w-4" />
-                Accueil
-              </Link>
-            </Button>
+          <Button 
+  asChild 
+  variant="ghost" 
+  className="relative overflow-hidden transition-all duration-300 hover:bg-gradient-to-r hover:from-pink-700/30 hover:to-purple-900/30 dark:hover:from-pink-950 dark:hover:to-purple-950 rounded-xl border border-pink-300/50 dark:border-purple-800/50 shadow-lg"
+>
+  <Link to="/" className="flex items-center px-4 py-2 font-medium">
+    <Home className="mr-2 h-5 w-5 text-pink-700 dark:text-pink-500 transition-transform group-hover:scale-110" />
+    <span className="bg-gradient-to-r from-pink-700 to-purple-900 dark:from-pink-500 dark:to-purple-600 bg-clip-text text-transparent font-semibold">
+      Accueil
+    </span>
+  </Link>
+</Button>
+
+
             <Button asChild className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:opacity-90">
               <Link to="/ajouter-article">
                 <PlusCircle className="mr-2 h-4 w-4" />
@@ -196,36 +210,53 @@ export default function Enregistrement() {
       <div className="w-full max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 flex-grow">
         {/* Search bar and filter section */}
         <div className="mb-8 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-6 border-2 border-pink-200/50 dark:border-purple-700/50">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="relative col-span-3">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Search Input */}
+            <div className="relative">
+              <Search 
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-pink-500 h-5 w-5 transition-all duration-300 hover:scale-110 z-10"
+              />
               <Input
                 type="search"
-                placeholder="Rechercher un article par nom..."
+                placeholder="Rechercher par nom ou référence..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 h-12 text-lg border-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-xl"
+                className="w-full pl-12 pr-4 h-12 text-lg border-2 border-pink-200/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-xl focus:border-pink-500 focus:ring-pink-500"
               />
             </div>
-          
+
+            {/* Category Select */}
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-full h-12 text-lg border-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-xl">
+              <SelectTrigger className="w-full h-12 text-lg border-2 border-pink-200/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-xl flex items-center">
+                <Tag className="mr-2 h-4 w-4 text-pink-500" />
                 <SelectValue placeholder="Filtrer par catégorie" />
               </SelectTrigger>
-            <SelectContent className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl">
-              {categories.map((category) => (
-                <SelectItem 
-                  key={category.id} 
-                  value={category.id}
-                  className="text-base py-3 hover:bg-pink-100 dark:hover:bg-pink-900"
-                >
-                  {category.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+              <SelectContent className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl">
+  {categories.map((category) => (
+    <SelectItem
+      key={category.id}
+      value={category.id}
+      className="text-base py-3 hover:bg-pink-100 dark:hover:bg-pink-900 flex items-center space-x-2"
+    >
+      <div className="flex items-center">
+        {category.id === 'all' && <Box className="h-4 w-4 text-pink-500" />}
+        {category.id === 'debardeur' && <Shirt className="h-4 w-4 text-pink-500" />}
+        {category.id === 'body' && <Shirt className="h-4 w-4 text-pink-500" />}
+        {category.id === 'tshirt' && <Shirt className="h-4 w-4 text-pink-500" />}
+        {category.id === 'manchelongue' && <Shirt className="h-4 w-4 text-pink-500" />}
+        {category.id === 'polo' && <Shirt className="h-4 w-4 text-pink-500" />}
+        {category.id === 'chemise' && <Shirt className="h-4 w-4 text-pink-500" />}
+        {category.id === 'bouson' && <Shirt className="h-4 w-4 text-pink-500" />}
+        {category.id === 'short' && <Shirt className="h-4 w-4 text-pink-500" />}
+        <span className="ml-2">{category.name}</span>
+      </div>
+    </SelectItem>
+  ))}
+</SelectContent>
 
+            </Select>
+          </div>
+        </div>
         {/* Liste des articles avec design moderne */}
         <div className="grid gap-4 mt-8">
           {currentArticles.map((article) => (
@@ -322,7 +353,6 @@ export default function Enregistrement() {
             <ChevronRight className="h-5 w-5" />
           </Button>
         </div>
-      </div>
       </div>
 
       {/* Footer moderne */}
