@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Home, Store, Package, Filter, Calendar, BarChart } from "lucide-react"
+import { Home, Store, Package, Filter, Calendar, BarChart, Search, Tag, Shirt } from "lucide-react"
 import { Link } from "react-router-dom"
+import { Input } from "@/components/ui/input";
 import { 
   Select,
   SelectContent,
@@ -10,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { HomeButton } from '@/components/HomeButton'
 
 // Updated store products data
 const storeProducts = [
@@ -19,16 +21,16 @@ const storeProducts = [
       { 
         name: "T-Shirt Blanc", 
         quantity: 150, 
-        reference: "TS-001", 
+        reference: "#000001", 
         category: "T-Shirt",
-        image: "/tshirt-blanc.jpg"
+        image: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=60"
       },
       { 
         name: "Chemise Blue", 
         quantity: 75, 
-        reference: "CH-002", 
+        reference: "#000002", 
         category: "Chemise",
-        image: "/chemise-blue.jpg"
+        image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=60"
       }
     ]
   },
@@ -38,16 +40,16 @@ const storeProducts = [
       { 
         name: "Polo Sport", 
         quantity: 45, 
-        reference: "PL-003", 
+        reference: "#000003", 
         category: "Polo",
-        image: "/polo-sport.jpg"
+        image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&auto=format&fit=crop&q=60"
       },
       { 
         name: "Robe d'été", 
         quantity: 30, 
-        reference: "RB-004", 
+        reference: "#000004", 
         category: "Robe",
-        image: "/robe-ete.jpg"
+        image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&auto=format&fit=crop&q=60"
       }
     ]
   }
@@ -58,32 +60,33 @@ const centralProducts = [
   { 
     name: "T-Shirt Blanc", 
     quantity: 500, 
-    reference: "TS-001", 
+    reference: "#000001", 
     category: "T-Shirt",
-    image: "/tshirt-blanc.jpg"
+    image: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=60"
   },
   { 
     name: "Chemise Blue", 
     quantity: 300, 
-    reference: "CH-002", 
+    reference: "#000002", 
     category: "Chemise",
-    image: "/chemise-blue.jpg"
+    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=60"
   },
   { 
     name: "Polo Sport", 
     quantity: 250, 
-    reference: "PL-003", 
+    reference: "#000003", 
     category: "Polo",
-    image: "/polo-sport.jpg"
+    image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&auto=format&fit=crop&q=60"
   },
   { 
     name: "Robe d'été", 
     quantity: 150, 
-    reference: "RB-004", 
+    reference: "#000004", 
     category: "Robe",
-    image: "/robe-ete.jpg"
+    image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&auto=format&fit=crop&q=60"
   }
 ]
+
 
 // Add categories constant
 const CATEGORIES = [
@@ -99,17 +102,20 @@ export function ProductCheck() {
   // Add state for filters
   const [storeFilter, setStoreFilter] = useState("Tous")
   const [centralFilter, setCentralFilter] = useState("Tous")
+  const [searchQuery, setSearchQuery] = useState("")
 
   // Filter functions
   const filteredStoreProducts = storeProducts.map(store => ({
     ...store,
     products: store.products.filter(product => 
-      storeFilter === "Tous" || product.category === storeFilter
+      (storeFilter === "Tous" || product.category === storeFilter) &&
+      product.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
   }))
 
   const filteredCentralProducts = centralProducts.filter(product => 
-    centralFilter === "Tous" || product.category === centralFilter
+    (centralFilter === "Tous" || product.category === centralFilter) &&
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   return (
@@ -119,28 +125,39 @@ export function ProductCheck() {
     {/* Header moderne */}
     <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b-2 border-pink-300/50 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
-          Vérification des Produits
-        </h1>
+      <div className="flex items-center gap-3">
+  <div className="animate-bounce">
+    <Filter className="h-6 w-6 text-pink-500" />
+  </div>
+  <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
+    Vérification des Produits
+  </h1>
+</div>
+
         <div className="flex gap-4">
-          <Button asChild variant="outline" className="hover:bg-pink-100 dark:hover:bg-pink-900">
-            <Link to="/statistique">
-              <Calendar className="mr-2 h-4 w-4" />
-              Récapitulation Journalière
-            </Link>
-          </Button>
-          <Button asChild variant="outline" className="hover:bg-pink-100 dark:hover:bg-pink-900">
-            <Link to="/graph-stats">
-              <BarChart className="mr-2 h-4 w-4" />
-              Statistique en graphique
-            </Link>
-          </Button>
-          <Button asChild variant="ghost" className="hover:bg-pink-100 dark:hover:bg-pink-900">
-            <Link to="/">
-              <Home className="mr-2 h-4 w-4" />
-              Accueil
-            </Link>
-          </Button>
+        <Link to="/statistique">
+  <Button 
+    variant="outline" 
+    className="group relative overflow-hidden border-2 border-pink-500/20 hover:border-pink-500 transition-all duration-300 hover:scale-105"
+  >
+    <span className="absolute inset-0 bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-blue-500/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500" />
+    <Calendar className="mr-2 h-4 w-4 text-pink-500 group-hover:rotate-12 transition-transform" />
+    <span className="relative">Récapitulation Journalière</span>
+  </Button>
+</Link>
+
+<Link to="/graph-stats">
+  <Button 
+    variant="outline" 
+    className="group relative overflow-hidden border-2 border-blue-500/20 hover:border-blue-500 transition-all duration-300 hover:scale-105"
+  >
+    <span className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500" />
+    <BarChart className="mr-2 h-4 w-4 text-blue-500 group-hover:animate-pulse transition-transform" />
+    <span className="relative">Statistique en graphique</span>
+  </Button>
+</Link>
+
+          <HomeButton/>
         </div>
       </div>
     </header>
@@ -151,111 +168,198 @@ export function ProductCheck() {
           {/* Section Dépôt Central */}
           <Card className="bg-background/60 backdrop-blur-xl">
             <CardHeader>
-              <div className="flex justify-between items-center">
-                <CardTitle className="flex items-center gap-2">
-                  <Package className="h-6 w-6" />
-                  Produits Dépôt Central
-                </CardTitle>
-                <Select onValueChange={setCentralFilter} defaultValue="Tous">
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Catégorie" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {CATEGORIES.map(category => (
-                      <SelectItem key={category} value={category}>
-                        <div className="flex items-center gap-2">
-                          <Filter className="h-4 w-4" />
-                          {category}
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              
+            <div className="flex justify-between items-center">
+  <div className="flex items-center gap-3">
+    <Package className="h-8 w-8 text-pink-500 animate-bounce" />
+    <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
+      Produits Dépôt Central
+    </h1>
+  </div>
+
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="relative">
+      <Search 
+        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-pink-500 h-5 w-5 transition-all duration-300 hover:scale-110 z-10"
+      />
+      <Input
+        type="search"
+        placeholder="Rechercher par nom ou référence..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="w-full pl-12 pr-4 h-12 text-lg border-2 border-pink-200/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-xl focus:border-pink-500 focus:ring-pink-500"
+      />
+    </div>
+
+    <Select value={centralFilter} onValueChange={setCentralFilter}>
+      <SelectTrigger className="w-full h-12 text-lg border-2 border-pink-200/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-xl flex items-center">
+        <Tag className="mr-2 h-4 w-4 text-pink-500" />
+        <SelectValue placeholder="Filtrer par catégorie" />
+      </SelectTrigger>
+      <SelectContent className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl">
+        {CATEGORIES.map((category) => (
+          <SelectItem
+            key={category}
+            value={category}
+            className="text-base py-3 hover:bg-pink-100 dark:hover:bg-pink-900 flex items-center space-x-2"
+          >
+            <div className="flex items-center">
+              <Shirt className="h-4 w-4 text-pink-500" />
+              <span className="ml-2">{category}</span>
+            </div>
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  </div>
+</div>
+
+
+
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredCentralProducts.map((product, index) => (
-                  <Card key={index} className="bg-background/40">
-                    <div className="aspect-video w-full overflow-hidden">
-                      <img 
-                        src={product.image} 
-                        alt={product.name}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform"
-                      />
-                    </div>
-                    <CardContent className="p-4">
-                      <div className="space-y-2">
-                        <p className="font-medium">{product.name}</p>
-                        <div className="text-sm text-muted-foreground">
-                          <p>Ref: {product.reference}</p>
-                          <p>Catégorie: {product.category}</p>
-                          <p className="font-semibold text-primary">
-                            Stock: {product.quantity}
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {filteredCentralProducts.map((product, index) => (
+    <Card key={index} className="group bg-background/40 hover:bg-background/60 transition-all duration-300 overflow-hidden border border-pink-200/50 hover:border-pink-500/50 hover:shadow-lg hover:shadow-pink-500/20">
+      <div className="relative">
+        <div className="absolute top-4 right-4 z-10">
+          <span className="px-3 py-1 bg-blue-600/90 backdrop-blur-sm text-white rounded-full font-mono text-sm shadow-md">
+            Ref: {product.reference}
+          </span>
+        </div>
+        <div className="aspect-video w-full overflow-hidden">
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+          />
+        </div>
+      </div>
+      <CardContent className="p-6 bg-gradient-to-b from-transparent to-background/60">
+        <div className="space-y-3">
+          <h3 className="font-semibold text-lg tracking-tight">
+            {product.name}
+          </h3>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Tag className="h-4 w-4 text-pink-500" />
+              <span>{product.category}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Package className="h-4 w-4 text-pink-500" />
+              <span className="font-bold text-primary">
+                Stock: {product.quantity}
+              </span>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  ))}
+</div>
+
+
             </CardContent>
           </Card>
           {/* Section Magasins */}
           <Card className="bg-background/60 backdrop-blur-xl">
             <CardHeader>
               <div className="flex justify-between items-center">
-                <CardTitle className="flex items-center gap-2">
-                  <Store className="h-6 w-6" />
-                  Produits des Magasins
-                </CardTitle>
-                <Select onValueChange={setStoreFilter} defaultValue="Tous">
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Catégorie" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {CATEGORIES.map(category => (
-                      <SelectItem key={category} value={category}>
-                        <div className="flex items-center gap-2">
-                          <Filter className="h-4 w-4" />
-                          {category}
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="flex items-center gap-3">
+                  <Store className="h-8 w-8 text-pink-500 animate-bounce" />
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
+                    Produits des Magasins
+                  </h1>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="relative">
+                    <Search 
+                      className="absolute left-4 top-1/2 transform -translate-y-1/2 text-pink-500 h-5 w-5 transition-all duration-300 hover:scale-110 z-10"
+                    />
+                    <Input
+                      type="search"
+                      placeholder="Rechercher par nom ou référence..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-12 pr-4 h-12 text-lg border-2 border-pink-200/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-xl focus:border-pink-500 focus:ring-pink-500"
+                    />
+                  </div>
+
+                  <Select value={storeFilter} onValueChange={setStoreFilter}>
+                    <SelectTrigger className="w-full h-12 text-lg border-2 border-pink-200/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-xl flex items-center">
+                      <Tag className="mr-2 h-4 w-4 text-pink-500" />
+                      <SelectValue placeholder="Filtrer par catégorie" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl">
+                      {CATEGORIES.map((category) => (
+                        <SelectItem
+                          key={category}
+                          value={category}
+                          className="text-base py-3 hover:bg-pink-100 dark:hover:bg-pink-900 flex items-center space-x-2"
+                        >
+                          <div className="flex items-center">
+                            <Shirt className="h-4 w-4 text-pink-500" />
+                            <span className="ml-2">{category}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </CardHeader>
             <CardContent>
               <div className="grid gap-6">
                 {filteredStoreProducts.map((store, index) => (
                   <div key={index} className="border rounded-lg p-4">
-                    <h3 className="font-semibold text-lg mb-4">{store.store}</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {store.products.map((product, pIndex) => (
-                        <Card key={pIndex} className="bg-background/40">
-                          <div className="aspect-video w-full overflow-hidden">
-                            <img 
-                              src={product.image} 
-                              alt={product.name}
-                              className="w-full h-full object-cover hover:scale-105 transition-transform"
-                            />
-                          </div>
-                          <CardContent className="p-4">
-                            <div className="space-y-2">
-                              <p className="font-medium">{product.name}</p>
-                              <div className="text-sm text-muted-foreground">
-                                <p>Ref: {product.reference}</p>
-                                <p>Catégorie: {product.category}</p>
-                                <p className="font-semibold text-primary">
-                                  Stock: {product.quantity}
-                                </p>
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
+                    <div className="flex items-center gap-3 bg-gradient-to-r from-pink-100/50 to-purple-100/50 dark:from-pink-900/50 dark:to-purple-900/50 p-4 rounded-lg mb-6">
+  <Store className="h-6 w-6 text-pink-500" />
+  <h3 className="font-bold text-xl bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
+    {store.store}
+  </h3>
+</div>
+
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {store.products.map((product, pIndex) => (
+    <Card key={pIndex} className="group bg-background/40 hover:bg-background/60 transition-all duration-300 overflow-hidden border border-pink-200/50 hover:border-pink-500/50 hover:shadow-lg hover:shadow-pink-500/20">
+      <div className="relative">
+        <div className="absolute top-4 right-4 z-10">
+          <span className="px-3 py-1 bg-blue-600/90 backdrop-blur-sm text-white rounded-full font-mono text-sm shadow-md">
+            Ref: {product.reference}
+          </span>
+        </div>
+        <div className="aspect-video w-full overflow-hidden">
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+          />
+        </div>
+      </div>
+      <CardContent className="p-6 bg-gradient-to-b from-transparent to-background/60">
+        <div className="space-y-3">
+          <h3 className="font-semibold text-lg tracking-tight">
+            {product.name}
+          </h3>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Tag className="h-4 w-4 text-pink-500" />
+              <span>{product.category}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Package className="h-4 w-4 text-pink-500" />
+              <span className="font-bold text-primary">
+                Stock: {product.quantity}
+              </span>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  ))}
+</div>
+
                   </div>
                 ))}
               </div>
@@ -276,3 +380,4 @@ export function ProductCheck() {
     </div>
   )
 }
+

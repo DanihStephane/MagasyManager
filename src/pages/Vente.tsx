@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Home, Trash2, Plus, Calculator, ArrowRight, ShoppingCart, ArrowLeft, Printer } from "lucide-react";import { Link } from "react-router-dom";
+import { Home, Trash2, Plus, Calculator, ArrowRight, ShoppingCart, ArrowLeft, Printer, ShoppingBag, Shirt } from "lucide-react";import { Link } from "react-router-dom";
 import { useState } from "react";
 import {
   Accordion,
@@ -11,6 +11,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Filter } from "lucide-react"; // Add this import} from "@/components/ui/accordion";
+import { HomeButton } from "@/components/HomeButton";
 
 interface Product {
   category: string;
@@ -22,6 +23,7 @@ interface CategoryItem {
   name: string;
   image: string;
   checked: boolean;
+  price: number; // Nouveau champ
 }
 
 interface PriceItem {
@@ -75,17 +77,18 @@ const handleQuantityToggle = (quantityValue: number) => {
   ));
 };
 
-  
-  const [categories, setCategories] = useState<CategoryItem[]>([
-    { name: "Débardeur", image: "/images/debardeur.jpg", checked: true },
-    { name: "Body", image: "/images/body.jpg", checked: true },
-    { name: "T-shirt", image: "/images/tshirt.jpg", checked: true },
-    { name: "Manche longue", image: "/images/manche-longue.jpg", checked: true },
-    { name: "Polo", image: "/images/polo.jpg", checked: true },    { name: "Chemise", image: "/images/chemise.jpg", checked: true },
-    { name: "Bouson", image: "/images/bouson.jpg", checked: true },
-    { name: "Short", image: "/images/short.jpg", checked: true },
-    { name: "Robe", image: "/images/robe.jpg", checked: true },
-  ]);
+ // Categories with checkboxes
+ const [categories, setCategories] = useState<CategoryItem[]>([
+  { name: "Débardeur", image: "/images/debardeur.jpg", checked: true, price: 15000 },
+  { name: "Body", image: "/images/body.jpg", checked: true, price: 20000 },
+  { name: "T-shirt", image: "/images/tshirt.jpg", checked: true, price: 25000 },
+  { name: "Manche longue", image: "/images/manches-longues.jpg", checked: true, price: 30000 },
+  { name: "Polo", image: "/images/polo.jpg", checked: true, price: 35000 },
+  { name: "Chemise", image: "/images/chemise.jpg", checked: true, price: 40000 },
+  { name: "Bouson", image: "/images/blouson.jpg", checked: true, price: 50000 },
+  { name: "Short", image: "/images/short.jpg", checked: true, price: 30000 },
+  { name: "Robe", image: "/images/robe.jpg", checked: true, price: 45000 },
+]);
 
   const handleCategoryToggle = (categoryName: string) => {
     setCategories(categories.map(cat => 
@@ -110,6 +113,10 @@ const handleQuantityToggle = (quantityValue: number) => {
 
   const calculateTotal = () => {
     return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  };
+
+  const calculateTotalQuantity = () => {
+    return cart.reduce((sum, item) => sum + item.quantity, 0);
   };
 
   const StepIndicator = ({ currentStep }: { currentStep: number }) => {
@@ -147,21 +154,20 @@ const handleQuantityToggle = (quantityValue: number) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-400/30 via-purple-400/30 to-blue-400/30 flex flex-col">
-     <div className="absolute inset-0 bg-[url('https://st4.depositphotos.com/1076214/20486/i/1600/depositphotos_204867158-stock-photo-interior-fashion-clothing-store-women.jpg')] bg-cover bg-center bg-no-repeat opacity-50 -z-[1]" />use 22
+     <div className="absolute inset-0 bg-[url('https://st4.depositphotos.com/1076214/20486/i/1600/depositphotos_204867158-stock-photo-interior-fashion-clothing-store-women.jpg')] bg-cover bg-center bg-no-repeat opacity-50 -z-[1]" />
      
     
     {/* Header moderne */}
     <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b-2 border-pink-300/50 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
-          Gestion des Ventes
-        </h1>
-        <Button asChild variant="ghost" className="hover:bg-pink-100 dark:hover:bg-pink-900">
-          <Link to="/">
-            <Home className="mr-2 h-4 w-4" />
-            Accueil
-          </Link>
-        </Button>
+      <h1 className="flex items-center gap-3 text-2xl font-bold">
+  <ShoppingBag className="h-8 w-8 animate-bounce text-pink-500" />
+  <span className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
+    Gestion des Ventes
+  </span>
+</h1>
+
+       <HomeButton/>
       </div>
     </header>
     <div className="w-full max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 flex-grow">
@@ -173,44 +179,59 @@ const handleQuantityToggle = (quantityValue: number) => {
                 Étape 1/4 - Sélection des articles
               </span>
               <Button 
-                variant="outline"
-                onClick={() => setStep(4)}
-                className="flex items-center gap-2"
-              >
-                <Calculator className="h-4 w-4" />
-                Total
-              </Button>
+  variant="outline"
+  onClick={() => setStep(4)}
+  className="flex items-center gap-2 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white hover:opacity-90 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+>
+  <Calculator className="h-4 w-4 animate-pulse" />
+  <span className="font-semibold">Voir le Total</span>
+  <span className="px-2 py-0.5 bg-white/20 rounded-full text-sm">
+    {calculateTotalQuantity()} articles
+  </span>
+</Button>
             </div>
             <Accordion type="single" collapsible className="mb-6">
-              <AccordionItem value="categories">
-                <Card>
-                  <CardHeader>
-                  <AccordionTrigger>
-                      <CardTitle className="flex items-center gap-2 text-xl bg-gradient-to-r from-primary/80 to-secondary/80 bg-clip-text text-transparent">
-                        <Filter className="h-5 w-5 text-primary" />
-                        Sélectionner vos articles
-                      </CardTitle>
-                    </AccordionTrigger>
-                  </CardHeader>
-                
-                  <AccordionContent>
-                    <CardContent className="p-4">
-                      <div className="flex flex-wrap gap-4">
-                        {categories.map((category) => (
-                          <div key={category.name} className="flex items-center space-x-2">
-                            <Checkbox 
-                              checked={category.checked}
-                              onCheckedChange={() => handleCategoryToggle(category.name)}
-                            />
-                            <label>{category.name}</label>
-                          </div>
-                        ))}
+            <AccordionItem value="categories">
+              <Card>
+                <CardHeader>
+                <AccordionTrigger>
+                    <CardTitle className="flex items-center gap-2 text-xl bg-gradient-to-r from-primary/80 to-secondary/80 bg-clip-text text-transparent">
+                      <Filter className="h-5 w-5 text-primary" />
+                      Sélectionner vos articles
+                    </CardTitle>
+                  </AccordionTrigger>
+                </CardHeader>
+              
+                <AccordionContent>
+                  <CardContent className="p-4">
+                    <div className="flex flex-wrap gap-4">
+                      {categories.map((category) => (
+                        <div 
+                        key={category.name} 
+                        className="flex items-center p-3 rounded-lg hover:bg-primary/5 transition-all duration-300 group cursor-pointer"
+                        onClick={() => handleCategoryToggle(category.name)}
+                      >
+                        <Checkbox
+                          checked={category.checked}
+                          onCheckedChange={() => handleCategoryToggle(category.name)}
+                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                        />
+                        <label className="ml-3 font-medium text-gray-700 group-hover:text-primary transition-colors cursor-pointer flex items-center gap-2">
+                          <Shirt className="h-4 w-4 text-primary/60" />
+                          {category.name}
+                          <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary">
+                            {categories.find(cat => cat.name === category.name)?.price.toLocaleString()} Ar
+                          </span>
+                        </label>
                       </div>
-                    </CardContent>
-                  </AccordionContent>
-                </Card>
-              </AccordionItem>
-            </Accordion>
+                      
+                      ))}
+                    </div>
+                  </CardContent>
+                </AccordionContent>
+              </Card>
+            </AccordionItem>
+          </Accordion>
             <div className="grid grid-cols-3 gap-4">
               {categories
                 .filter(cat => cat.checked)
@@ -223,6 +244,9 @@ const handleQuantityToggle = (quantityValue: number) => {
                     <CardContent className="p-4">
                       <img src={category.image} alt={category.name} className="w-full h-48 object-cover rounded" />
                       <h3 className="text-center mt-2">{category.name}</h3>
+                      <p className="text-center text-sm text-muted-foreground">
+                      {category.price.toLocaleString()} Ar
+                    </p>
                     </CardContent>
                   </Card>
                 ))}
@@ -236,7 +260,14 @@ const handleQuantityToggle = (quantityValue: number) => {
             </div>
             <Card>
               <CardHeader>
-                <CardTitle>{selectedCategory}</CardTitle>
+              <CardTitle>
+  <div className="flex items-center gap-2">
+    <Shirt className="h-5 w-5 text-primary" />
+    <span className="bg-gradient-to-r from-primary/80 to-secondary/80 bg-clip-text text-transparent">
+      {selectedCategory}
+    </span>
+  </div>
+</CardTitle>
               </CardHeader>
               <CardContent>
                 <Accordion type="single" collapsible className="mb-6">
@@ -341,7 +372,14 @@ const handleQuantityToggle = (quantityValue: number) => {
             </div>
             <Card>
               <CardHeader>
-                <CardTitle>{selectedCategory} - {price} Ar</CardTitle>
+                <CardTitle>
+  <div className="flex items-center gap-2">
+    <Shirt className="h-5 w-5 text-primary" />
+    <span className="bg-gradient-to-r from-primary/80 to-secondary/80 bg-clip-text text-transparent">
+    {selectedCategory} - {price} Ar
+    </span>
+  </div>
+</CardTitle>
               </CardHeader>
               <CardContent>
                 <Accordion type="single" collapsible className="mb-6">
@@ -440,12 +478,17 @@ const handleQuantityToggle = (quantityValue: number) => {
                   </Button>
                 </div>
                 <Button 
-                  className="w-full mt-4" 
-                  onClick={() => setStep(4)}
-                >
-                  <Calculator className="mr-2 h-4 w-4" />
-                  Total
-                </Button>
+  variant="outline"
+  onClick={() => setStep(4)}
+  className="mt-5 w-full flex items-center gap-2 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white hover:opacity-90 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+>
+  <Calculator className="h-4 w-4 animate-pulse" />
+  <span className="font-semibold">Voir le Total</span>
+  <span className="px-2 py-0.5 bg-white/20 rounded-full text-sm">
+    {calculateTotalQuantity()} articles
+  </span>
+</Button>
+
               </CardContent>
             </Card>
           </>
@@ -457,7 +500,14 @@ const handleQuantityToggle = (quantityValue: number) => {
             </div>
             <Card>
               <CardHeader className="flex flex-row justify-between items-center">
-                <CardTitle>Récapitulatif</CardTitle>
+              <CardTitle>
+  <div className="flex items-center gap-2">
+    <ShoppingCart className="h-5 w-5 text-primary" />
+    <span className="bg-gradient-to-r from-primary/80 to-secondary/80 bg-clip-text text-transparent">
+      Récapitulatif
+    </span>
+  </div>
+</CardTitle>
                 <Button 
                   variant="outline"
                   onClick={() => window.print()}
