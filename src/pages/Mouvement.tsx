@@ -2,10 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Home, Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
+import { Home, Search, Filter, ChevronLeft, ChevronRight, ArrowUpDown, Tag, Box, Store, Building2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
+import { HomeButton } from "@/components/HomeButton";
 
 export default function Mouvement() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -29,7 +30,7 @@ export default function Mouvement() {
       quantite: 5,
       magasinSource: "Boutique Centre",
       dateReception: "2024-01-14",
-      image: "/images/jean.jpg",
+      image: "/images/matieres/jeans.jpg",
       categorie: "bas"
     },
     {
@@ -56,7 +57,7 @@ export default function Mouvement() {
       quantite: 2,
       magasinSource: "Boutique Nord",
       dateReception: "2024-01-11",
-      image: "/images/veste.jpg",
+      image: "/images/blouson.jpg",
       categorie: "veste"
     },
     {
@@ -286,74 +287,149 @@ const filterItems = (items) => {
     {/* Header moderne */}
     <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b-2 border-pink-300/50 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
-          Mouvements de Stock
-        </h1>
-        <Button asChild variant="ghost" className="hover:bg-pink-100 dark:hover:bg-pink-900">
-          <Link to="/">
-            <Home className="mr-2 h-4 w-4" />
-            Accueil
-          </Link>
-        </Button>
+      <div className="flex items-center gap-3">
+  <ArrowUpDown className="w-8 h-8 animate-bounce text-pink-500" />
+  <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
+    Mouvements de Stock
+  </h1>
+</div>
+
+  <HomeButton/>
       </div>
     </header>
 
     <div className="w-full max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 flex-grow">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
-          <div className="relative col-span-3">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
-            <Input
-              type="search"
-              placeholder="Rechercher un article..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 h-12 text-lg border-2 bg-background/60 backdrop-blur-xl"
-            />
-          </div>
-          
-          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-full h-12 text-lg border-2 bg-background/60 backdrop-blur-xl">
-              <SelectValue placeholder="Filtrer par catégorie" />
-            </SelectTrigger>
-            <SelectContent>
-              {categories.map((category) => (
-                <SelectItem key={category.id} value={category.id}>
-                  {category.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    {/* Search Input */}
+    <div className="relative">
+      <Search 
+        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-pink-500 h-5 w-5 transition-all duration-300 hover:scale-110 z-10"
+      />
+      <Input
+        type="search"
+        placeholder="Rechercher un article..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="w-full pl-12 pr-4 h-12 text-lg border-2 border-pink-200/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-xl focus:border-pink-500 focus:ring-pink-500"
+      />
+    </div>
 
-          <Select value={selectedStore} onValueChange={setSelectedStore}>
-            <SelectTrigger className="w-full h-12 text-lg border-2 bg-background/60 backdrop-blur-xl">
-              <SelectValue placeholder="Filtrer par boutique" />
-            </SelectTrigger>
-            <SelectContent>
-              {stores.map((store) => (
-                <SelectItem key={store.id} value={store.id}>
-                  {store.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+    {/* Category Select */}
+    <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+  <SelectTrigger className="w-full h-12 text-lg border-2 border-pink-200/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-xl">
+    <div className="flex items-center gap-2 w-full">
+      <Tag className="h-4 w-4 text-pink-500" />
+      <SelectValue placeholder="Filtrer par catégorie" />
+    </div>
+  </SelectTrigger>
+  <SelectContent>
+    {categories.map((category) => (
+      <SelectItem
+        key={category.id}
+        value={category.id}
+        className="text-base py-3 hover:bg-pink-100 dark:hover:bg-pink-900"
+      >
+        <div className="flex items-center gap-2">
+          <Box className="h-4 w-4 text-pink-500" />
+          <span>{category.name}</span>
         </div>
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
+<Select value={selectedStore} onValueChange={setSelectedStore}>
+  <SelectTrigger className="w-full h-12 text-lg border-2 border-pink-200/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-xl">
+    <div className="flex items-center gap-2 w-full">
+      <Store className="h-4 w-4 text-pink-500" />
+      <SelectValue placeholder="Filtrer par boutique" />
+    </div>
+  </SelectTrigger>
+  <SelectContent>
+    {stores.map((store) => (
+      <SelectItem
+        key={store.id}
+        value={store.id}
+        className="text-base py-3 hover:bg-pink-100 dark:hover:bg-pink-900"
+      >
+        <div className="flex items-center gap-2">
+          <Building2 className="h-4 w-4 text-pink-500" />
+          <span>{store.name}</span>
+        </div>
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
+  </div>
         <Tabs defaultValue="surplus-recu" className="space-y-4">
-          <TabsList className="grid grid-cols-2 w-full">
-            <TabsTrigger value="surplus-recu">Surplus Reçu</TabsTrigger>
-            <TabsTrigger value="surplus-donne">Surplus Donné</TabsTrigger>
-          </TabsList>
+        <TabsList className="mt-5 grid grid-cols-2 w-full p-1 bg-white/30 backdrop-blur-md rounded-xl shadow-lg border-2 border-pink-200/50">
+  <TabsTrigger 
+    value="surplus-recu" 
+    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-300 rounded-lg py-3 font-medium flex items-center justify-center gap-2"
+  >
+    <ArrowUpDown className="w-5 h-5" />
+    Surplus Reçu
+  </TabsTrigger>
+  <TabsTrigger 
+    value="surplus-donne" 
+    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-blue-500 data-[state=active]:text-white transition-all duration-300 rounded-lg py-3 font-medium flex items-center justify-center gap-2"
+  >
+    <ArrowUpDown className="w-5 h-5" />
+    Surplus Donné
+  </TabsTrigger>
+</TabsList>
+
 
           <TabsContent value="surplus-recu">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
               {paginateItems(surplusRecu).map((item) => (
-                <Card key={item.id} className="overflow-hidden">
-                  <img src={item.image} alt={item.article} className="w-full h-48 object-cover" />
-                  <CardContent className="p-4">
-                    <h3 className="font-semibold text-lg mb-2">{item.article}</h3>
-                    <div className="space-y-1 text-sm">
-                      <p>Quantité: {item.quantite}</p>
-                      <p>Source: {item.magasinSource}</p>
-                      <p>Date: {item.dateReception}</p>
+                <Card key={item.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-300 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-2 border-primary/20 hover:border-primary/50">
+                  <div className="relative">
+                    {/* Reference Badge */}
+                    <div className="absolute top-4 right-4 z-10">
+                      <div className="bg-primary/90 backdrop-blur-sm text-white px-4 py-2 rounded-full font-mono text-sm shadow-lg transform group-hover:scale-110 transition-transform">
+                        #{item.id.toString().padStart(6, '0')}
+                      </div>
+                    </div>
+                    
+                    {/* Image Container */}
+                    <div className="aspect-video w-full overflow-hidden">
+                      <img
+                        src={item.image}
+                        alt={item.article}
+                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                      />
+                    </div>
+                  </div>
+
+                  <CardContent className="p-6 space-y-4">
+                    {/* Article Name */}
+                    <h3 className="font-bold text-xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                      {item.article}
+                    </h3>
+
+                    {/* Details Grid */}
+                    <div className="grid gap-3 text-sm">
+                      <div className="flex items-center justify-between p-2 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors">
+                        <span className="text-muted-foreground">Quantité</span>
+                        <span className="font-semibold">{item.quantite}</span>
+                      </div>
+
+                      <div className="flex items-center justify-between p-2 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors">
+                        <span className="text-muted-foreground">
+                          {item.magasinSource ? 'Source' : 'Destination'}
+                        </span>
+                        <span className="font-semibold flex items-center gap-2">
+                          <Store className="h-4 w-4 text-primary" />
+                          {item.magasinSource || item.magasinDest}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between p-2 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors">
+                        <span className="text-muted-foreground">Date</span>
+                        <span className="font-semibold">{item.dateReception || item.dateTransfert}</span>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -362,7 +438,7 @@ const filterItems = (items) => {
             <PaginationControls items={surplusRecu} />
           </TabsContent>
           <TabsContent value="surplus-donne">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
               {paginateItems(surplusDonne).map((item) => (
                 <Card key={item.id} className="overflow-hidden">
                   <img src={item.image} alt={item.article} className="w-full h-48 object-cover" />

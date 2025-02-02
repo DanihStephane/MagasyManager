@@ -80,7 +80,7 @@ import { CheckCircle } from "lucide-react";
             <div className="flex items-center gap-3">
               <Layout className="h-8 w-8 text-pink-500 animate-bounce" />
               <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
-                MagasyManager
+                MagasyManager (Toky & Marine)
               </h1>
             </div>
             <Button

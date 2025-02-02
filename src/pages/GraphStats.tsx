@@ -5,6 +5,7 @@ import { Link } from "react-router-dom"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useState } from "react"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { HomeButton } from "@/components/HomeButton"
 
 interface SaleData {
   date: Date
@@ -164,28 +165,41 @@ export function GraphStats() {
     {/* Header moderne */}
     <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b-2 border-pink-300/50 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
-          Statistiques en Graphiques
-        </h1>
+      <div className="flex items-center gap-3">
+  <BarChart2 className="h-8 w-8 animate-bounce text-pink-500" />
+  <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
+    Statistiques en Graphiques
+  </h1>
+</div>
+
         <div className="flex gap-4">
-          <Button asChild variant="outline" className="hover:bg-pink-100 dark:hover:bg-pink-900">
-            <Link to="/statistique">
-              <Calendar className="mr-2 h-4 w-4" />
-              Récapitulation Journalière
-            </Link>
-          </Button>
-          <Button asChild variant="outline" className="hover:bg-pink-100 dark:hover:bg-pink-900">
-            <Link to="/product-check">
-              <BarChart2 className="mr-2 h-4 w-4" />
-              Check nombre de produit disponible
-            </Link>
-          </Button>
-          <Button asChild variant="ghost" className="hover:bg-pink-100 dark:hover:bg-pink-900">
-            <Link to="/">
-              <Home className="mr-2 h-4 w-4" />
-              Accueil
-            </Link>
-          </Button>
+        <div className="flex gap-4">
+  <Button 
+    asChild 
+    variant="outline" 
+    className="group relative overflow-hidden border-2 border-pink-500/20 hover:border-pink-500 transition-all duration-300 hover:scale-105"
+  >
+    <Link to="/statistique">
+      <span className="absolute inset-0 bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-blue-500/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500" />
+      <Calendar className="mr-2 h-4 w-4 text-pink-500 group-hover:rotate-12 transition-transform" />
+      <span className="relative">Récapitulation Journalière</span>
+    </Link>
+  </Button>
+
+  <Button 
+    asChild 
+    variant="outline" 
+    className="group relative overflow-hidden border-2 border-blue-500/20 hover:border-blue-500 transition-all duration-300 hover:scale-105"
+  >
+    <Link to="/product-check">
+      <span className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500" />
+      <BarChart2 className="mr-2 h-4 w-4 text-blue-500 group-hover:animate-pulse transition-transform" />
+      <span className="relative">Check nombre de produit disponible</span>
+    </Link>
+  </Button>
+</div>
+
+          <HomeButton/>
         </div>
       </div>
     </header>
@@ -193,35 +207,68 @@ export function GraphStats() {
     <div className="w-full max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 flex-grow">
         <Card className="bg-background/60 backdrop-blur-xl">
           <CardHeader>
-            <div className="flex justify-between items-center">
-              <CardTitle className="flex items-center gap-2">
-                <BarChart2 className="h-6 w-6" />
-                Analyses Graphiques
-              </CardTitle>
-              <div className="flex gap-4">
-                <Select value={timeFrame} onValueChange={setTimeFrame}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Période" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="day">Jour</SelectItem>
-                    <SelectItem value="month">Mois</SelectItem>
-                    <SelectItem value="year">Année</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Select value={metric} onValueChange={setMetric}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Métrique" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="sales">Prix de vente</SelectItem>
-                    <SelectItem value="quantity">Nombre d'articles</SelectItem>
-                    <SelectItem value="profit">Bénéfice</SelectItem>
-                    <SelectItem value="byCategory">Par catégorie</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+          <div className="flex gap-4">
+  <Select value={timeFrame} onValueChange={setTimeFrame}>
+    <SelectTrigger className="w-full h-12 text-lg border-2 border-pink-200/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-xl flex items-center">
+      <Calendar className="mr-2 h-4 w-4 text-pink-500" />
+      <SelectValue placeholder="Sélectionner une période" />
+    </SelectTrigger>
+    <SelectContent className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl">
+      <SelectItem value="day" className="text-base py-3 hover:bg-pink-100 dark:hover:bg-pink-900 flex items-center space-x-2">
+        <div className="flex items-center">
+          <Calendar className="h-4 w-4 text-pink-500" />
+          <span className="ml-2">Jour</span>
+        </div>
+      </SelectItem>
+      <SelectItem value="month" className="text-base py-3 hover:bg-pink-100 dark:hover:bg-pink-900 flex items-center space-x-2">
+        <div className="flex items-center">
+          <Calendar className="h-4 w-4 text-pink-500" />
+          <span className="ml-2">Mois</span>
+        </div>
+      </SelectItem>
+      <SelectItem value="year" className="text-base py-3 hover:bg-pink-100 dark:hover:bg-pink-900 flex items-center space-x-2">
+        <div className="flex items-center">
+          <Calendar className="h-4 w-4 text-pink-500" />
+          <span className="ml-2">Année</span>
+        </div>
+      </SelectItem>
+    </SelectContent>
+  </Select>
+
+  <Select value={metric} onValueChange={setMetric}>
+    <SelectTrigger className="w-full h-12 text-lg border-2 border-pink-200/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-xl flex items-center">
+      <BarChart2 className="mr-2 h-4 w-4 text-pink-500" />
+      <SelectValue placeholder="Sélectionner une métrique" />
+    </SelectTrigger>
+    <SelectContent className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl">
+      <SelectItem value="sales" className="text-base py-3 hover:bg-pink-100 dark:hover:bg-pink-900 flex items-center space-x-2">
+        <div className="flex items-center">
+          <BarChart2 className="h-4 w-4 text-pink-500" />
+          <span className="ml-2">Prix de vente</span>
+        </div>
+      </SelectItem>
+      <SelectItem value="quantity" className="text-base py-3 hover:bg-pink-100 dark:hover:bg-pink-900 flex items-center space-x-2">
+        <div className="flex items-center">
+          <BarChart2 className="h-4 w-4 text-pink-500" />
+          <span className="ml-2">Nombre d'articles</span>
+        </div>
+      </SelectItem>
+      <SelectItem value="profit" className="text-base py-3 hover:bg-pink-100 dark:hover:bg-pink-900 flex items-center space-x-2">
+        <div className="flex items-center">
+          <BarChart2 className="h-4 w-4 text-pink-500" />
+          <span className="ml-2">Bénéfice</span>
+        </div>
+      </SelectItem>
+      <SelectItem value="byCategory" className="text-base py-3 hover:bg-pink-100 dark:hover:bg-pink-900 flex items-center space-x-2">
+        <div className="flex items-center">
+          <BarChart2 className="h-4 w-4 text-pink-500" />
+          <span className="ml-2">Par catégorie</span>
+        </div>
+      </SelectItem>
+    </SelectContent>
+  </Select>
+</div>
+
           </CardHeader>
           <CardContent>
             <div className="h-[400px] mt-4">
@@ -260,7 +307,8 @@ export function GraphStats() {
                   )}
                 </BarChart>
               </ResponsiveContainer>
-            </div>          </CardContent>
+            </div>          
+            </CardContent>
         </Card>
       </div>
       {/* Footer moderne */}

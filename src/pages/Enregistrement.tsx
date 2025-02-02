@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search } from "lucide-react";
 import { ArrowLeft, Plus, Tag, Box, Palette, Ruler, Hash, CreditCard, Package2, FileText, Shirt } from "lucide-react";
+import { HomeButton } from "@/components/HomeButton";
 
 // Ajoutez cette interface pour typer les articles
 interface Article {
@@ -183,18 +184,7 @@ export default function Enregistrement() {
 </div>
 
           <div className="flex gap-4">
-          <Button 
-  asChild 
-  variant="ghost" 
-  className="relative overflow-hidden transition-all duration-300 hover:bg-gradient-to-r hover:from-pink-700/30 hover:to-purple-900/30 dark:hover:from-pink-950 dark:hover:to-purple-950 rounded-xl border border-pink-300/50 dark:border-purple-800/50 shadow-lg"
->
-  <Link to="/" className="flex items-center px-4 py-2 font-medium">
-    <Home className="mr-2 h-5 w-5 text-pink-700 dark:text-pink-500 transition-transform group-hover:scale-110" />
-    <span className="bg-gradient-to-r from-pink-700 to-purple-900 dark:from-pink-500 dark:to-purple-600 bg-clip-text text-transparent font-semibold">
-      Accueil
-    </span>
-  </Link>
-</Button>
+          
 
 
             <Button asChild className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:opacity-90">
@@ -203,6 +193,7 @@ export default function Enregistrement() {
                 Ajouter un Article
               </Link>
             </Button>
+            <HomeButton/>
           </div>
         </div>
       </header>
