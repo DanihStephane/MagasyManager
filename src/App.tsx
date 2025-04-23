@@ -13,6 +13,7 @@ import CommandeStock from "./pages/CommandeStock";
 import Depassement from "./pages/Depassement";
 import { ProductCheck } from "@/pages/ProductCheck";
 import { GraphStats } from "@/pages/GraphStats";
+import Inventaire from "./pages/Inventaire";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
       <Route path="/depassement" element={<Depassement />} />
       <Route path="/product-check" element={<ProductCheck />} />
       <Route path="/graph-stats" element={<GraphStats />} />
+      <Route path="/inventaire" element={<Inventaire />} />
     </Routes>
   );
 }
