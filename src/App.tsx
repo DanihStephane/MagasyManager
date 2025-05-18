@@ -14,6 +14,8 @@ import Depassement from "./pages/Depassement";
 import { ProductCheck } from "@/pages/ProductCheck";
 import { GraphStats } from "@/pages/GraphStats";
 import Inventaire from "./pages/Inventaire";
+import Tracking from './pages/Tracking';
+import SelectionInventaire from "./pages/SelectionInventaire";
 
 function App() {
   return (
@@ -33,6 +35,8 @@ function App() {
       <Route path="/product-check" element={<ProductCheck />} />
       <Route path="/graph-stats" element={<GraphStats />} />
       <Route path="/inventaire" element={<Inventaire />} />
+      <Route path="/tracking" element={<Tracking />} />
+      <Route path="/selection-inventaire" element={<SelectionInventaire />} />
     </Routes>
   );
 }

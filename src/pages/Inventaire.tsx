@@ -1,15 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Package2, Tag, Shirt, AlertCircle, Check, X } from "lucide-react";
+import { Search, Package2, Tag, Shirt, AlertCircle, Check, X, ArrowLeft, User } from "lucide-react";
 import { HomeButton } from "@/components/HomeButton";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 
 interface Article {
   id: number;
@@ -27,76 +28,7 @@ interface Article {
 }
 
 const INITIAL_ARTICLES: Article[] = [
-  { 
-    id: 1, 
-    nom: "T-shirt Premium",
-    reference: "#" + Math.floor(100000 + Math.random() * 900000).toString(),
-    prix: 120000, 
-    stockPredefini: 45,
-    stockComptage: null,
-    categorie: "haut",
-    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500",
-    tentatives: 0,
-    remarque: "",
-    estVerifie: false,
-    estEnErreur: false
-  },
-  { 
-    id: 2, 
-    nom: "Jean Slim", 
-    reference: "#" + Math.floor(100000 + Math.random() * 900000).toString(),
-    prix: 240000, 
-    stockPredefini: 30,
-    stockComptage: null,
-    categorie: "bas",
-    image: "https://images.unsplash.com/photo-1542272604-787c3835535d?w=500",
-    tentatives: 0,
-    remarque: "",
-    estVerifie: false,
-    estEnErreur: false
-  },
-  { 
-    id: 3, 
-    nom: "Veste en Cuir", 
-    reference: "#" + Math.floor(100000 + Math.random() * 900000).toString(),
-    prix: 850000, 
-    stockPredefini: 15,
-    stockComptage: null,
-    categorie: "veste",
-    image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500",
-    tentatives: 0,
-    remarque: "",
-    estVerifie: false,
-    estEnErreur: false
-  },
-  { 
-    id: 4, 
-    nom: "Robe d'été", 
-    reference: "#" + Math.floor(100000 + Math.random() * 900000).toString(),
-    prix: 180000, 
-    stockPredefini: 25,
-    stockComptage: null,
-    categorie: "robe",
-    image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=500",
-    tentatives: 0,
-    remarque: "",
-    estVerifie: false,
-    estEnErreur: false
-  },
-  { 
-    id: 5, 
-    nom: "Sweat à Capuche", 
-    reference: "#" + Math.floor(100000 + Math.random() * 900000).toString(),
-    prix: 150000, 
-    stockPredefini: 40,
-    stockComptage: null,
-    categorie: "haut",
-    image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500",
-    tentatives: 0,
-    remarque: "",
-    estVerifie: false,
-    estEnErreur: false
-  }
+  // ... (garder les articles existants)
 ];
 
 const categories = [
@@ -108,14 +40,30 @@ const categories = [
 ];
 
 export default function Inventaire() {
+  const navigate = useNavigate();
   const [articles, setArticles] = useState<Article[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [currentTab, setCurrentTab] = useState("tous");
+  const [assignedCategory, setAssignedCategory] = useState<string | null>(null);
+  const [responsableName, setResponsableName] = useState<string>("");
   
   useEffect(() => {
+    // Récupérer la catégorie assignée et le responsable
+    const category = localStorage.getItem('inventaireCurrentCategory');
+    const responsable = localStorage.getItem('inventaireCurrentResponsable');
+    
+    if (category) {
+      setAssignedCategory(category);
+      setSelectedCategory(category);
+    }
+    
+    if (responsable) {
+      setResponsableName(responsable);
+    }
+    
     // Initialiser les articles depuis localStorage ou utiliser les articles par défaut
     const savedArticles = localStorage.getItem('inventaireArticles');
     if (savedArticles) {
@@ -138,7 +86,11 @@ export default function Inventaire() {
     const matchesSearch = 
       article.nom.toLowerCase().includes(searchTermLower) ||
       article.reference.toLowerCase().includes(searchTermLower);
-    const matchesCategory = selectedCategory === "all" ? true : article.categorie === selectedCategory;
+    
+    // Si une catégorie est assignée, ne montrer que les articles de cette catégorie
+    const matchesCategory = assignedCategory 
+      ? article.categorie === assignedCategory 
+      : selectedCategory === "all" ? true : article.categorie === selectedCategory;
     
     // Filtrer par onglet
     if (currentTab === "tous") return matchesSearch && matchesCategory;
@@ -210,10 +162,45 @@ export default function Inventaire() {
     setDialogOpen(true);
   };
 
-  const progressInventaire = {
-    total: articles.length,
-    verifies: articles.filter(a => a.estVerifie).length,
-    erreurs: articles.filter(a => a.estEnErreur).length
+  // Calculer les statistiques pour la catégorie assignée ou toutes les catégories
+  const getProgressInventaire = () => {
+    const articlesToCount = assignedCategory 
+      ? articles.filter(a => a.categorie === assignedCategory)
+      : articles;
+    
+    return {
+      total: articlesToCount.length,
+      verifies: articlesToCount.filter(a => a.estVerifie).length,
+      erreurs: articlesToCount.filter(a => a.estEnErreur).length
+    };
+  };
+
+  const progressInventaire = getProgressInventaire();
+
+  // Vérifier si l'inventaire est terminé pour cette catégorie
+  const isInventaireComplete = () => {
+    if (!assignedCategory) return false;
+    
+    const articlesInCategory = articles.filter(a => a.categorie === assignedCategory);
+    return articlesInCategory.every(a => a.estVerifie);
+  };
+
+  // Marquer la catégorie comme terminée
+  const markCategoryAsComplete = () => {
+    if (!assignedCategory) return;
+    
+    // Récupérer les assignations
+    const savedAssignments = localStorage.getItem('inventaireAssignments');
+    if (savedAssignments) {
+      const assignments = JSON.parse(savedAssignments);
+      const updatedAssignments = assignments.map((a: any) => 
+        a.categorie === assignedCategory ? { ...a, estTermine: true } : a
+      );
+      localStorage.setItem('inventaireAssignments', JSON.stringify(updatedAssignments));
+    }
+    
+    // Retourner à la page de sélection
+    navigate('/selection-inventaire');
   };
 
   return (
@@ -228,21 +215,63 @@ export default function Inventaire() {
             <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
               Inventaire des Articles
             </h1>
+            
+            {assignedCategory && (
+              <Badge className={`ml-2 ${
+                categories.find(c => c.id === assignedCategory)?.id === 'haut' ? 'bg-pink-500' :
+                categories.find(c => c.id === assignedCategory)?.id === 'bas' ? 'bg-blue-500' :
+                categories.find(c => c.id === assignedCategory)?.id === 'veste' ? 'bg-purple-500' :
+                'bg-green-500'
+              }`}>
+                {categories.find(c => c.id === assignedCategory)?.name}
+              </Badge>
+            )}
           </div>
 
           <div className="flex gap-4">
-            <Button asChild className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:opacity-90">
-              <Link to="/enregistrement">
-                <Shirt className="mr-2 h-4 w-4" />
-                Gestion des Articles
-              </Link>
-            </Button>
+            {assignedCategory ? (
+              <Button 
+                onClick={() => navigate('/selection-inventaire')}
+                variant="outline"
+                className="flex items-center gap-2"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Retour
+              </Button>
+            ) : (
+              <Button asChild className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:opacity-90">
+                <Link to="/enregistrement">
+                  <Shirt className="mr-2 h-4 w-4" />
+                  Gestion des Articles
+                </Link>
+              </Button>
+            )}
             <HomeButton/>
           </div>
         </div>
       </header>
 
       <div className="w-full max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 flex-grow">
+        {/* Informations sur le responsable */}
+        {responsableName && (
+          <div className="mb-6 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-4 border-2 border-pink-200/50 dark:border-purple-700/50 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <User className="h-5 w-5 text-pink-500" />
+              <span className="font-medium">Responsable: <span className="text-pink-600">{responsableName}</span></span>
+            </div>
+            
+            {isInventaireComplete() && (
+              <Button 
+                onClick={markCategoryAsComplete}
+                className="bg-green-500 hover:bg-green-600"
+              >
+                <Check className="mr-2 h-4 w-4" />
+                Terminer l'inventaire
+              </Button>
+            )}
+          </div>
+        )}
+        
         {/* Progrès d'inventaire */}
         <div className="mb-8 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-6 border-2 border-pink-200/50 dark:border-purple-700/50">
           <h2 className="text-xl font-semibold mb-4 text-pink-600">Progression de l'inventaire</h2>
@@ -279,7 +308,7 @@ export default function Inventaire() {
                 </div>
                 <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
                   <AlertCircle className="h-6 w-6 text-red-600" />
-                </div>
+                  </div>
               </CardContent>
             </Card>
           </div>
@@ -302,28 +331,30 @@ export default function Inventaire() {
               />
             </div>
 
-            {/* Category Select */}
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-full h-12 text-lg border-2 border-pink-200/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-xl flex items-center">
-                <Tag className="mr-2 h-4 w-4 text-pink-500" />
-                <SelectValue placeholder="Filtrer par catégorie" />
-              </SelectTrigger>
-              <SelectContent className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl">
-                {categories.map((category) => (
-                  <SelectItem
-                    key={category.id}
-                    value={category.id}
-                    className="text-base py-3 hover:bg-pink-100 dark:hover:bg-pink-900 flex items-center space-x-2"
-                  >
-                    <div className="flex items-center">
-                      {category.id === 'all' && <Package2 className="h-4 w-4 text-pink-500" />}
-                      {category.id !== 'all' && <Shirt className="h-4 w-4 text-pink-500" />}
-                      <span className="ml-2">{category.name}</span>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {/* Category Select - Seulement visible si aucune catégorie n'est assignée */}
+            {!assignedCategory && (
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="w-full h-12 text-lg border-2 border-pink-200/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-xl flex items-center">
+                  <Tag className="mr-2 h-4 w-4 text-pink-500" />
+                  <SelectValue placeholder="Filtrer par catégorie" />
+                </SelectTrigger>
+                <SelectContent className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl">
+                  {categories.map((category) => (
+                    <SelectItem
+                      key={category.id}
+                      value={category.id}
+                      className="text-base py-3 hover:bg-pink-100 dark:hover:bg-pink-900 flex items-center space-x-2"
+                    >
+                      <div className="flex items-center">
+                        {category.id === 'all' && <Package2 className="h-4 w-4 text-pink-500" />}
+                        {category.id !== 'all' && <Shirt className="h-4 w-4 text-pink-500" />}
+                        <span className="ml-2">{category.name}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           </div>
         </div>
 

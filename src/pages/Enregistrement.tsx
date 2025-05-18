@@ -6,7 +6,7 @@ import { useState , useEffect} from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search } from "lucide-react";
-import { ArrowLeft, Plus, Tag, Box, Palette, Ruler, Hash, CreditCard, Package2, FileText, Shirt } from "lucide-react";
+import { ArrowLeft, Plus, Tag, Box, Palette, Ruler, Hash, CreditCard, Package2, FileText, Shirt, MapPin } from "lucide-react";
 import { HomeButton } from "@/components/HomeButton";
 
 // Ajoutez cette interface pour typer les articles
@@ -18,6 +18,8 @@ interface Article {
   categorie: string;
   image: string;
   reference?: string;
+  couleur?: string;
+  emplacement?: string;
 }
 
 // 1. Déplacer les données initiales dans une constante
@@ -29,7 +31,9 @@ const INITIAL_ARTICLES = [
     prix: 120000, 
     stock: 45,
     categorie: "haut",
-    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500"
+    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500",
+    couleur: "#3B82F6",
+    emplacement: "A-1-2"
   },
   { 
     id: 2, 
@@ -38,7 +42,9 @@ const INITIAL_ARTICLES = [
     prix: 240000, 
     stock: 30,
     categorie: "bas",
-    image: "https://images.unsplash.com/photo-1542272604-787c3835535d?w=500"
+    image: "https://images.unsplash.com/photo-1542272604-787c3835535d?w=500",
+    couleur: "#1E3A8A",
+    emplacement: "B-3-1"
   },
   { 
     id: 3, 
@@ -47,7 +53,9 @@ const INITIAL_ARTICLES = [
     prix: 850000, 
     stock: 15,
     categorie: "veste",
-    image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500"
+    image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500",
+    couleur: "#7C2D12",
+    emplacement: "C-2-3"
   },
   { 
     id: 4, 
@@ -56,7 +64,9 @@ const INITIAL_ARTICLES = [
     prix: 180000, 
     stock: 25,
     categorie: "robe",
-    image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=500"
+    image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=500",
+    couleur: "#DB2777",
+    emplacement: "A-4-2"
   },
   { 
     id: 5, 
@@ -65,7 +75,9 @@ const INITIAL_ARTICLES = [
     prix: 150000, 
     stock: 40,
     categorie: "haut",
-    image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500"
+    image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500",
+    couleur: "#4B5563",
+    emplacement: "B-1-1"
   },
   { 
     id: 6, 
@@ -74,7 +86,9 @@ const INITIAL_ARTICLES = [
     prix: 160000, 
     stock: 20,
     categorie: "haut",
-    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=500"
+    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=500",
+    couleur: "#F59E0B",
+    emplacement: "A-2-3"
   },
   { 
     id: 7, 
@@ -83,7 +97,9 @@ const INITIAL_ARTICLES = [
     prix: 450000, 
     stock: 10,
     categorie: "haut",
-    image: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=500"
+    image: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=500",
+    couleur: "#9D174D",
+    emplacement: "C-1-2"
   },
   { 
     id: 8, 
@@ -92,7 +108,9 @@ const INITIAL_ARTICLES = [
     prix: 120000, 
     stock: 35,
     categorie: "bas",
-    image: "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=500"
+    image: "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=500",
+    couleur: "#2563EB",
+    emplacement: "B-2-1"
   },
   { 
     id: 9, 
@@ -101,7 +119,9 @@ const INITIAL_ARTICLES = [
     prix: 380000, 
     stock: 18,
     categorie: "veste",
-    image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=500"
+    image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=500",
+    couleur: "#1F2937",
+    emplacement: "C-3-2"
   },
   { 
     id: 10, 
@@ -110,7 +130,9 @@ const INITIAL_ARTICLES = [
     prix: 220000, 
     stock: 28,
     categorie: "bas",
-    image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=500"
+    image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=500",
+    couleur: "#78350F",
+    emplacement: "B-4-3"
   }
 ];
 
@@ -125,6 +147,7 @@ const categories = [
   { id: "bouson", name: "Bouson" },
   { id: "short", name: "Short" }
 ];
+
 export default function Enregistrement() {
   // 2. Déplacer le useState à l'intérieur du composant
   const [articles, setArticles] = useState<Article[]>(INITIAL_ARTICLES);
@@ -160,12 +183,21 @@ export default function Enregistrement() {
   };
 
   // Add this at the beginning of the component
-    useEffect(() => {
-      const savedArticles = localStorage.getItem('articles');
-      if (savedArticles) {
-        setArticles(JSON.parse(savedArticles));
-      }
-    }, []);
+  useEffect(() => {
+    const savedArticles = localStorage.getItem('articles');
+    if (savedArticles) {
+      setArticles(JSON.parse(savedArticles));
+    }
+  }, []);
+
+  // Fonction pour supprimer un article
+  const handleDeleteArticle = (id: number) => {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer cet article ?")) {
+      const updatedArticles = articles.filter(article => article.id !== id);
+      setArticles(updatedArticles);
+      localStorage.setItem('articles', JSON.stringify(updatedArticles));
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-400/30 via-purple-400/30 to-blue-400/30 flex flex-col">
@@ -263,40 +295,55 @@ export default function Enregistrement() {
                     <h3 className="font-semibold text-lg bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
                       {article.nom.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
                     </h3>
-                                      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-                                        <Palette className="w-4 h-4 text-pink-500" />
-                                        <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
-    Couleur :
-  </span>
-                                        <div 
-                                          className="w-4 h-4 rounded-full border-2 border-white shadow-sm" 
-                                          style={{ backgroundColor: article.couleur }}
-                                        />
-                                      </div>
+                    <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                      <Palette className="w-4 h-4 text-pink-500" />
+                      <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
+                        Couleur :
+                      </span>
+                      <div 
+                        className="w-4 h-4 rounded-full border-2 border-white shadow-sm" 
+                        style={{ backgroundColor: article.couleur }}
+                      />
+                    </div>
                     <p className="text-gray-600 dark:text-gray-300">
                       Prix: {article.prix.toLocaleString()} Ar | Stock: {article.stock} unités
                     </p>
                     <div className="flex items-center gap-2 mt-1">
-  <Tag className="w-4 h-4 text-pink-500" />
-  <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
-    Classe :
-  </span>
-  <span className="text-sm px-2 py-1 rounded-full bg-pink-100 dark:bg-pink-900 text-pink-600 dark:text-pink-300 font-medium">
-    {categories.find(cat => cat.id === article.categorie)?.name}
-  </span>
-</div>
-
+                      <Tag className="w-4 h-4 text-pink-500" />
+                      <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
+                        Classe :
+                      </span>
+                      <span className="text-sm px-2 py-1 rounded-full bg-pink-100 dark:bg-pink-900 text-pink-600 dark:text-pink-300 font-medium">
+                        {categories.find(cat => cat.id === article.categorie)?.name || article.categorie}
+                      </span>
+                    </div>
+                    {article.emplacement && (
+                      <div className="flex items-center gap-2 mt-1">
+                        <MapPin className="w-4 h-4 text-pink-500" />
+                        <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
+                          Emplacement :
+                        </span>
+                        <span className="text-sm px-2 py-1 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 font-medium">
+                          {article.emplacement}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="flex flex-col items-end gap-4">
-                  <span className="px-4 py-2 text-lg font-bold font-mono bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 text-white rounded-xl shadow-lg">
+                <span className="px-4 py-2 text-lg font-bold font-mono bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 text-white rounded-xl shadow-lg">
                     {article.reference}
                   </span>
                   <div className="flex gap-2">
                     <Button variant="outline" size="icon" className="hover:bg-pink-100 dark:hover:bg-pink-900 rounded-xl">
                       <Pencil className="h-4 w-4" />
                     </Button>
-                    <Button variant="destructive" size="icon" className="rounded-xl">
+                    <Button 
+                      variant="destructive" 
+                      size="icon" 
+                      className="rounded-xl"
+                      onClick={() => handleDeleteArticle(article.id)}
+                    >
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
@@ -306,43 +353,118 @@ export default function Enregistrement() {
           ))}
         </div>
 
+        {/* Afficher un message si aucun article n'est trouvé */}
+        {currentArticles.length === 0 && (
+          <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-8 border-2 border-pink-200/50 dark:border-purple-700/50 text-center">
+            <div className="flex flex-col items-center gap-4">
+              <Package2 className="h-16 w-16 text-pink-300" />
+              <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300">Aucun article trouvé</h3>
+              <p className="text-gray-500 dark:text-gray-400">
+                {searchTerm 
+                  ? `Aucun résultat pour "${searchTerm}"`
+                  : selectedCategory !== "all" 
+                    ? "Aucun article dans cette catégorie"
+                    : "Commencez par ajouter votre premier article"
+                }
+              </p>
+              <Button asChild className="mt-4 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500">
+                <Link to="/ajouter-article">
+                  <PlusCircle className="mr-2 h-4 w-4" />
+                  Ajouter un Article
+                </Link>
+              </Button>
+            </div>
+          </div>
+        )}
+
         {/* Pagination mise à jour */}
-        <div className="flex justify-center items-center gap-2 mt-8">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="hover:bg-pink-100 dark:hover:bg-pink-900 rounded-full w-10 h-10"
-            onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </Button>
-          
-          {pageNumbers.map((number) => (
-            <Button
-              key={number}
-              variant="ghost"
-              size="sm"
-              className={`rounded-full w-10 h-10 ${
-                number === currentPage 
-                  ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white' 
-                  : 'hover:bg-pink-100 dark:hover:bg-pink-900'
-              }`}
-              onClick={() => handlePageChange(number)}
+        {filteredArticles.length > 0 && (
+          <div className="flex justify-center items-center gap-2 mt-8">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="hover:bg-pink-100 dark:hover:bg-pink-900 rounded-full w-10 h-10"
+              onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
             >
-              {number}
+              <ChevronLeft className="h-5 w-5" />
             </Button>
-          ))}
-          
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="hover:bg-pink-100 dark:hover:bg-pink-900 rounded-full w-10 h-10"
-            onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
-            <ChevronRight className="h-5 w-5" />
-          </Button>
+            
+            {pageNumbers.map((number) => (
+              <Button
+                key={number}
+                variant="ghost"
+                size="sm"
+                className={`rounded-full w-10 h-10 ${
+                  number === currentPage 
+                    ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white' 
+                    : 'hover:bg-pink-100 dark:hover:bg-pink-900'
+                }`}
+                onClick={() => handlePageChange(number)}
+              >
+                {number}
+              </Button>
+            ))}
+            
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="hover:bg-pink-100 dark:hover:bg-pink-900 rounded-full w-10 h-10"
+              onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              <ChevronRight className="h-5 w-5" />
+            </Button>
+          </div>
+        )}
+
+        {/* Statistiques des articles */}
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="bg-gradient-to-br from-pink-50 to-purple-50 dark:from-pink-900/20 dark:to-purple-900/20 border-pink-200/50 dark:border-purple-700/50">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-pink-100 dark:bg-pink-900/30 rounded-full">
+                  <Package2 className="h-6 w-6 text-pink-500" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Total des articles</p>
+                  <p className="text-2xl font-bold text-pink-600 dark:text-pink-400">{articles.length}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 border-purple-200/50 dark:border-blue-700/50">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-full">
+                  <CreditCard className="h-6 w-6 text-purple-500" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Valeur totale</p>
+                  <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                    {articles.reduce((total, article) => total + (article.prix * article.stock), 0).toLocaleString()} Ar
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-blue-50 to-pink-50 dark:from-blue-900/20 dark:to-pink-900/20 border-blue-200/50 dark:border-pink-700/50">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full">
+                  <Shirt className="h-6 w-6 text-blue-500" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Stock total</p>
+                  <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                    {articles.reduce((total, article) => total + article.stock, 0)} unités
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
 
@@ -357,7 +479,5 @@ export default function Enregistrement() {
     </div>
   );
 }
-
-
 
 

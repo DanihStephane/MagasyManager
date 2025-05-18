@@ -58,8 +58,8 @@ export const moduleData = {
       title: "Inventaire 📋",
       description: "🔍 Contrôle précis des stocks | 📊 Suivi des quantités | 🚨 Alertes de seuil minimal | ⚡ Mise à jour en temps réel",
       icon: "📋",
-      path: "/inventaire",
-      image: "/images/modules/inventory-check.png"
+      path: "/selection-inventaire",
+      image: "/images/modules/inventaire.jpg"
     },
     {
       title: "Commande 🛍️",

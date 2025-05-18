@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Home, ArrowLeft, Check , Plus} from "lucide-react";
+import { Home, ArrowLeft, Check, Plus, Package, LayoutGrid } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Link, useNavigate } from "react-router-dom";
 import { 
@@ -12,7 +12,7 @@ import {
   DollarSign,
   Palette,
   FileText,
-  Package,
+  Package2,
 } from "lucide-react";
 import {
   Accordion,
@@ -49,7 +49,8 @@ export default function AjouterArticle() {
     image: "",
     prixUnitaire: "",
     quantite: "",
-    description: ""
+    description: "",
+    emplacement: ""
   });
   const [showRecap, setShowRecap] = useState(false);  // Définition des étapes
   const navigate = useNavigate();
@@ -293,8 +294,8 @@ return (
                 ${index === currentStep 
                   ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white scale-110 shadow-lg' 
                   : index < currentStep 
-                    ? 'bg-gradient-to-r from-green-400 to-green-500 text-white' 
-                    : 'bg-white border-2 border-gray-200'
+                  ? 'bg-gradient-to-r from-green-400 to-green-500 text-white' 
+                  : 'bg-white border-2 border-gray-200'
                 }`}>
                 {index < currentStep ? (
                   <Check className="w-5 h-5" />
@@ -500,7 +501,7 @@ return (
 </div>
 <div>
 <label className="text-sm font-medium flex items-center gap-2">
-  <Package className="h-4 w-4 text-pink-500" />
+  <Package2 className="h-4 w-4 text-pink-500" />
   <span>Quantité</span>
 </label>
 
@@ -673,9 +674,152 @@ return (
     onChange={(e) => setSelections({...selections, couleur: e.target.value})}
   />
 </div>
+
+<div>
+  <label className="text-sm font-medium flex items-center gap-2">
+    <Package className="h-4 w-4 text-pink-500" />
+    <span>Emplacement dans l'entrepôt</span>
+  </label>
+
+  <div className="mt-4 bg-white/90 rounded-xl p-4 border border-pink-200/50">
+    <h4 className="text-lg font-medium text-pink-600 mb-4">Plan de l'entrepôt</h4>
+    
+    <div className="grid grid-cols-3 gap-4 mb-6">
+      {/* Rangée A - Première rangée */}
+      <div className="space-y-2">
+        <div className="bg-blue-100 p-2 text-center rounded-t-lg font-medium text-blue-700">
+          Rangée A
+        </div>
+        <div className="grid grid-cols-3 gap-2">
+          {[1, 2, 3].map((shelf) => (
+            <Button
+              key={`A-${shelf}-1`}
+              variant={selections.emplacement === `A-${shelf}-1` ? "default" : "outline"}
+              className={`h-16 ${selections.emplacement === `A-${shelf}-1` ? "bg-pink-500" : "hover:bg-blue-100"}`}
+              onClick={() => setSelections({...selections, emplacement: `A-${shelf}-1`})}
+            >
+              A-{shelf}-1
+            </Button>
+          ))}
+        </div>
+        <div className="grid grid-cols-3 gap-2">
+          {[1, 2, 3].map((shelf) => (
+            <Button
+              key={`A-${shelf}-2`}
+              variant={selections.emplacement === `A-${shelf}-2` ? "default" : "outline"}
+              className={`h-16 ${selections.emplacement === `A-${shelf}-2` ? "bg-pink-500" : "hover:bg-blue-100"}`}
+              onClick={() => setSelections({...selections, emplacement: `A-${shelf}-2`})}
+            >
+              A-{shelf}-2
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      {/* Rangée B - Deuxième rangée */}
+      <div className="space-y-2">
+        <div className="bg-green-100 p-2 text-center rounded-t-lg font-medium text-green-700">
+          Rangée B
+        </div>
+        <div className="grid grid-cols-3 gap-2">
+          {[1, 2, 3].map((shelf) => (
+            <Button
+              key={`B-${shelf}-1`}
+              variant={selections.emplacement === `B-${shelf}-1` ? "default" : "outline"}
+              className={`h-16 ${selections.emplacement === `B-${shelf}-1` ? "bg-pink-500" : "hover:bg-green-100"}`}
+              onClick={() => setSelections({...selections, emplacement: `B-${shelf}-1`})}
+            >
+              B-{shelf}-1
+            </Button>
+          ))}
+        </div>
+        <div className="grid grid-cols-3 gap-2">
+          {[1, 2, 3].map((shelf) => (
+            <Button
+              key={`B-${shelf}-2`}
+              variant={selections.emplacement === `B-${shelf}-2` ? "default" : "outline"}
+              className={`h-16 ${selections.emplacement === `B-${shelf}-2` ? "bg-pink-500" : "hover:bg-green-100"}`}
+              onClick={() => setSelections({...selections, emplacement: `B-${shelf}-2`})}
+            >
+              B-{shelf}-2
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      {/* Rangée C - Troisième rangée */}
+      <div className="space-y-2">
+        <div className="bg-purple-100 p-2 text-center rounded-t-lg font-medium text-purple-700">
+          Rangée C
+        </div>
+        <div className="grid grid-cols-3 gap-2">
+          {[1, 2, 3].map((shelf) => (
+            <Button
+              key={`C-${shelf}-1`}
+              variant={selections.emplacement === `C-${shelf}-1` ? "default" : "outline"}
+              className={`h-16 ${selections.emplacement === `C-${shelf}-1` ? "bg-pink-500" : "hover:bg-purple-100"}`}
+              onClick={() => setSelections({...selections, emplacement: `C-${shelf}-1`})}
+            >
+              C-{shelf}-1
+            </Button>
+          ))}
+        </div>
+        <div className="grid grid-cols-3 gap-2">
+          {[1, 2, 3].map((shelf) => (
+            <Button
+              key={`C-${shelf}-2`}
+              variant={selections.emplacement === `C-${shelf}-2` ? "default" : "outline"}
+              className={`h-16 ${selections.emplacement === `C-${shelf}-2` ? "bg-pink-500" : "hover:bg-purple-100"}`}
+              onClick={() => setSelections({...selections, emplacement: `C-${shelf}-2`})}
+            >
+              C-{shelf}-2
+            </Button>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div className="mt-4 bg-gray-50 p-3 rounded-lg border border-gray-200">
+      <div className="flex items-center gap-2 mb-2">
+        <LayoutGrid className="h-4 w-4 text-pink-500" />
+        <span className="text-sm font-medium">Légende:</span>
+      </div>
+      <div className="grid grid-cols-3 gap-2 text-sm">
+        <div className="flex items-center gap-1">
+          <div className="w-3 h-3 bg-blue-100 rounded-sm"></div>
+          <span>Rangée A: Vêtements légers</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="w-3 h-3 bg-green-100 rounded-sm"></div>
+          <span>Rangée B: Vêtements moyens</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="w-3 h-3 bg-purple-100 rounded-sm"></div>
+          <span>Rangée C: Vêtements lourds</span>
+        </div>
+      </div>
+      <div className="mt-2 text-xs text-gray-500">
+        <p>Format: [Rangée]-[Étagère]-[Niveau]</p>
+        <p>Exemple: A-1-2 = Rangée A, Étagère 1, Niveau 2</p>
+      </div>
+    </div>
+
+    {selections.emplacement && (
+      <div className="mt-4 p-3 bg-pink-50 rounded-lg border border-pink-200 animate-pulse">
+        <p className="font-medium text-pink-700">Emplacement sélectionné: {selections.emplacement}</p>
+        <p className="text-sm text-pink-600">
+          {selections.emplacement.startsWith('A') && 'Zone vêtements légers'}
+          {selections.emplacement.startsWith('B') && 'Zone vêtements moyens'}
+          {selections.emplacement.startsWith('C') && 'Zone vêtements lourds'}
+        </p>
+      </div>
+    )}
+  </div>
+</div>
               </div>
             </CardContent>
-          </Card>        ) : (
+          </Card>
+        ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {steps[currentStep].choices?.map((choice) => (
               <Card 

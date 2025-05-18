@@ -1,5 +1,4 @@
-
-import { Layout, Sun, Moon, Languages } from 'lucide-react';
+import { Layout, Sun, Moon, Languages, MapPin, Navigation } from 'lucide-react';
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle, CardContent} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
@@ -7,7 +6,7 @@ import { useTheme } from '@/hooks/use-theme';
 import { useLanguage } from '@/hooks/use-language';
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { CheckCircle } from "lucide-react";
 import { translations, moduleData } from '@/translations';
 import {
@@ -21,6 +20,7 @@ export default function Home() {
   const { theme, setTheme } = useTheme();
   const { language, setLanguage } = useLanguage();
   const { state } = useLocation();
+  const navigate = useNavigate();
   const [showMessage, setShowMessage] = useState(false);
   const [surplusItems, setSurplusItems] = useState<{category: string, quantity: number}[]>([]);
 
@@ -33,6 +33,10 @@ export default function Home() {
 
   const handleClose = () => {
     setShowMessage(false);
+  };
+
+  const handleStartTracking = () => {
+    navigate('/tracking');
   };
 
   // Utiliser les modules traduits selon la langue choisie
@@ -51,6 +55,19 @@ export default function Home() {
             </h1>
           </div>
           <div className="flex items-center gap-2">
+            {/* Tracking Mode Button */}
+            <Button
+              variant="outline"
+              onClick={handleStartTracking}
+              className="rounded-full bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white border-none flex items-center gap-2 px-4 py-2"
+            >
+              <div className="relative">
+                <MapPin className="h-5 w-5" />
+                <div className="absolute -inset-1 rounded-full border-2 border-white animate-ping opacity-75"></div>
+              </div>
+              <span>{language === 'fr' ? 'Mode Déplacement' : 'Fomba Fifindra'}</span>
+            </Button>
+            
             {/* Language Selector */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -191,4 +208,3 @@ export default function Home() {
     </div>
   );
 }
-
