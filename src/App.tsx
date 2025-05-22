@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Enregistrement from './pages/Enregistrement';
 import Commande from './pages/Commande';
@@ -16,11 +16,16 @@ import { GraphStats } from "@/pages/GraphStats";
 import Inventaire from "./pages/Inventaire";
 import Tracking from './pages/Tracking';
 import SelectionInventaire from "./pages/SelectionInventaire";
+import UnlockScreen from './pages/Unlock';
+import GestionBalles from './pages/GestionBalles';
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<Navigate to="/unlock" />} />
+      <Route path="/unlock" element={<UnlockScreen />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="/gestion-balles" element={<GestionBalles />} />
       <Route path="/enregistrement" element={<Enregistrement />} />
       <Route path="/commande" element={<Commande />} />
       <Route path="/image" element={<Image />} />

@@ -1,4 +1,4 @@
-import { Layout, Sun, Moon, Languages, MapPin, Navigation } from 'lucide-react';
+import { Layout, Sun, Moon, Languages, MapPin, Navigation, LogOut, Package, Search, Filter } from 'lucide-react';
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle, CardContent} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
@@ -38,9 +38,26 @@ export default function Home() {
   const handleStartTracking = () => {
     navigate('/tracking');
   };
+  
+  const handleLockApp = () => {
+    navigate('/unlock');
+  };
 
-  // Utiliser les modules traduits selon la langue choisie
-  const modules = moduleData[language];
+  // Ajouter le module de gestion des balles aux modules existants
+  const additionalModules = [
+    {
+      title: language === 'fr' ? 'Gestion des Balles' : 'Fitantanana ny Balles',
+      description: language === 'fr' 
+        ? 'Enregistrez et gérez les balles de vêtements dans le dépôt avec leur emplacement et contenu' 
+        : 'Hisoratra sy hitantana ny balles fitafiana ao amin\'ny toerana fitehirizana miaraka amin\'ny toerana sy ny ao anatiny',
+      path: '/gestion-balles',
+      image: 'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+      icon: <Package className="h-8 w-8 text-pink-500" />,
+    }
+  ];
+
+  // Utiliser les modules traduits selon la langue choisie et ajouter le nouveau module
+  const modules = [...moduleData[language], ...additionalModules];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-400/30 via-purple-400/30 to-blue-400/30 flex flex-col">
@@ -55,6 +72,16 @@ export default function Home() {
             </h1>
           </div>
           <div className="flex items-center gap-2">
+            {/* Lock App Button */}
+            <Button
+              variant="outline"
+              onClick={handleLockApp}
+              className="rounded-full bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600 text-white border-none flex items-center gap-2 px-4 py-2"
+            >
+              <LogOut className="h-5 w-5" />
+              <span>{language === 'fr' ? 'Verrouiller' : 'Hidio'}</span>
+            </Button>
+            
             {/* Tracking Mode Button */}
             <Button
               variant="outline"

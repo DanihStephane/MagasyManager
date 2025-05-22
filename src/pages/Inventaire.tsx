@@ -4,13 +4,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Package2, Tag, Shirt, AlertCircle, Check, X, ArrowLeft, User } from "lucide-react";
+import { Search, Package2, Tag, Shirt, AlertCircle, Check, X, ArrowLeft, User, Calendar, Star } from "lucide-react";
 import { HomeButton } from "@/components/HomeButton";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
+import { Label } from "@/components/ui/label";
 
 interface Article {
   id: number;
@@ -39,6 +42,80 @@ const categories = [
   { id: "robe", name: "Robes" }
 ];
 
+// Fonction pour déterminer la notation en étoiles basée sur la quantité
+const getStockRating = (stock: number): { rating: number; color: string } => {
+  if (stock >= 50) return { rating: 5, color: "text-red-500" }; // Beaucoup de stock - rouge
+  if (stock >= 30) return { rating: 4, color: "text-orange-500" }; // Stock élevé - orange
+  if (stock >= 15) return { rating: 3, color: "text-yellow-500" }; // Stock moyen - jaune
+  if (stock >= 5) return { rating: 2, color: "text-blue-500" }; // Stock faible - bleu
+  return { rating: 1, color: "text-gray-500" }; // Très peu de stock - gris
+};
+
+// Composant pour afficher les étoiles
+const StockRating = ({ stock }: { stock: number }) => {
+  const { rating, color } = getStockRating(stock);
+  
+  return (
+    <div className="flex items-center gap-1 mt-1" title={`Niveau de stock: ${rating}/5`}>
+      {[...Array(5)].map((_, i) => (
+        <Star 
+          key={i} 
+          className={`w-4 h-4 ${i < rating ? color : 'text-gray-200'}`} 
+          fill={i < rating ? "currentColor" : "none"} 
+        />
+      ))}
+      <span className={`ml-1 text-xs font-medium ${color}`}>
+        {stock} unités
+      </span>
+    </div>
+  );
+};
+
+// Fonction pour déterminer la notation en étoiles basée sur la quantité totale d'articles dans une catégorie
+const getCategoryRating = (totalStock: number): { rating: number; color: string } => {
+  if (totalStock >= 200) return { rating: 5, color: "text-red-500" }; // Beaucoup d'articles - rouge
+  if (totalStock >= 150) return { rating: 4, color: "text-orange-500" }; // Nombre élevé - orange
+  if (totalStock >= 100) return { rating: 3, color: "text-yellow-500" }; // Nombre moyen - jaune
+  if (totalStock >= 50) return { rating: 2, color: "text-blue-500" }; // Peu d'articles - bleu
+  return { rating: 1, color: "text-gray-500" }; // Très peu d'articles - gris
+};
+
+// Composant pour afficher les étoiles pour une catégorie
+const CategoryStockRating = ({ 
+  categoryId, 
+  articles,
+  showCount = false 
+}: { 
+  categoryId: string;
+  articles: Article[];
+  showCount?: boolean;
+}) => {
+  // Calculer le stock total pour cette catégorie
+  const categoryArticles = categoryId === "all" 
+    ? articles 
+    : articles.filter(a => a.categorie === categoryId);
+  
+  const totalStock = categoryArticles.reduce((sum, article) => sum + article.stockPredefini, 0);
+  const { rating, color } = getCategoryRating(totalStock);
+  
+  return (
+    <div className="flex items-center gap-1" title={`Niveau de stock: ${rating}/5`}>
+      {[...Array(5)].map((_, i) => (
+        <Star 
+          key={i} 
+          className={`w-4 h-4 ${i < rating ? color : 'text-gray-200'}`} 
+          fill={i < rating ? "currentColor" : "none"} 
+        />
+      ))}
+      {showCount && (
+        <span className={`ml-1 text-xs font-medium ${color}`}>
+          {totalStock} articles
+        </span>
+      )}
+    </div>
+  );
+};
+
 export default function Inventaire() {
   const navigate = useNavigate();
   const [articles, setArticles] = useState<Article[]>([]);
@@ -49,11 +126,13 @@ export default function Inventaire() {
   const [currentTab, setCurrentTab] = useState("tous");
   const [assignedCategory, setAssignedCategory] = useState<string | null>(null);
   const [responsableName, setResponsableName] = useState<string>("");
+  const [inventaireDate, setInventaireDate] = useState<Date>(new Date());
   
   useEffect(() => {
     // Récupérer la catégorie assignée et le responsable
     const category = localStorage.getItem('inventaireCurrentCategory');
     const responsable = localStorage.getItem('inventaireCurrentResponsable');
+    const savedDate = localStorage.getItem('inventaireDate');
     
     if (category) {
       setAssignedCategory(category);
@@ -62,6 +141,10 @@ export default function Inventaire() {
     
     if (responsable) {
       setResponsableName(responsable);
+    }
+    
+    if (savedDate) {
+      setInventaireDate(new Date(savedDate));
     }
     
     // Initialiser les articles depuis localStorage ou utiliser les articles par défaut
@@ -79,6 +162,11 @@ export default function Inventaire() {
       localStorage.setItem('inventaireArticles', JSON.stringify(articles));
     }
   }, [articles]);
+
+  // Sauvegarde de la date d'inventaire
+  useEffect(() => {
+    localStorage.setItem('inventaireDate', inventaireDate.toISOString());
+  }, [inventaireDate]);
 
   // Filtrer les articles
   const filteredArticles = articles.filter(article => {
@@ -203,6 +291,9 @@ export default function Inventaire() {
     navigate('/selection-inventaire');
   };
 
+  // Formater la date pour l'affichage
+  const formattedDate = format(inventaireDate, "dd MMMM yyyy", { locale: fr });
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-400/30 via-purple-400/30 to-blue-400/30 flex flex-col">
       <div className="absolute inset-0 bg-[url('https://st4.depositphotos.com/1076214/20486/i/1600/depositphotos_204867158-stock-photo-interior-fashion-clothing-store-women.jpg')] bg-cover bg-center bg-no-repeat opacity-50 -z-[1]" />
@@ -217,14 +308,24 @@ export default function Inventaire() {
             </h1>
             
             {assignedCategory && (
-              <Badge className={`ml-2 ${
-                categories.find(c => c.id === assignedCategory)?.id === 'haut' ? 'bg-pink-500' :
-                categories.find(c => c.id === assignedCategory)?.id === 'bas' ? 'bg-blue-500' :
-                categories.find(c => c.id === assignedCategory)?.id === 'veste' ? 'bg-purple-500' :
-                'bg-green-500'
-              }`}>
-                {categories.find(c => c.id === assignedCategory)?.name}
-              </Badge>
+              <div className="flex flex-col ml-2">
+                <Badge className={`${
+                  categories.find(c => c.id === assignedCategory)?.id === 'haut' ? 'bg-pink-500' :
+                  categories.find(c => c.id === assignedCategory)?.id === 'bas' ? 'bg-blue-500' :
+                  categories.find(c => c.id === assignedCategory)?.id === 'veste' ? 'bg-purple-500' :
+                  'bg-green-500'
+                }`}>
+                  {categories.find(c => c.id === assignedCategory)?.name}
+                </Badge>
+                
+                {/* Ajout des étoiles pour la catégorie sélectionnée */}
+                <div className="mt-1">
+                  <CategoryStockRating 
+                    categoryId={assignedCategory} 
+                    articles={articles} 
+                  />
+                </div>
+              </div>
             )}
           </div>
 
@@ -252,25 +353,42 @@ export default function Inventaire() {
       </header>
 
       <div className="w-full max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 flex-grow">
-        {/* Informations sur le responsable */}
-        {responsableName && (
-          <div className="mb-6 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-4 border-2 border-pink-200/50 dark:border-purple-700/50 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <User className="h-5 w-5 text-pink-500" />
-              <span className="font-medium">Responsable: <span className="text-pink-600">{responsableName}</span></span>
-            </div>
-            
-            {isInventaireComplete() && (
-              <Button 
-                onClick={markCategoryAsComplete}
-                className="bg-green-500 hover:bg-green-600"
-              >
-                <Check className="mr-2 h-4 w-4" />
-                Terminer l'inventaire
-              </Button>
-            )}
+        {/* Informations sur le responsable et la date */}
+        <div className="mb-6 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-4 border-2 border-pink-200/50 dark:border-purple-700/50 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <User className="h-5 w-5 text-pink-500" />
+            <span className="font-medium">Responsable: <span className="text-pink-600">{responsableName}</span></span>
           </div>
-        )}
+          
+          <div className="flex items-center gap-3">
+            <Calendar className="h-5 w-5 text-pink-500" />
+            <div className="flex flex-col">
+              <Label htmlFor="inventaire-date" className="text-sm text-gray-600">Date d'inventaire:</Label>
+              <Input
+                id="inventaire-date"
+                type="date"
+                value={inventaireDate.toISOString().split('T')[0]}
+                onChange={(e) => {
+                  if (e.target.value) {
+                    setInventaireDate(new Date(e.target.value));
+                  }
+                }}
+                className="border-pink-200 hover:border-pink-500"
+              />
+            </div>
+            <span className="font-medium text-pink-600">{formattedDate}</span>
+          </div>
+          
+          {isInventaireComplete() && (
+            <Button 
+              onClick={markCategoryAsComplete}
+              className="bg-green-500 hover:bg-green-600"
+            >
+              <Check className="mr-2 h-4 w-4" />
+              Terminer l'inventaire
+            </Button>
+          )}
+        </div>
         
         {/* Progrès d'inventaire */}
         <div className="mb-8 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-6 border-2 border-pink-200/50 dark:border-purple-700/50">
@@ -345,10 +463,20 @@ export default function Inventaire() {
                       value={category.id}
                       className="text-base py-3 hover:bg-pink-100 dark:hover:bg-pink-900 flex items-center space-x-2"
                     >
-                      <div className="flex items-center">
-                        {category.id === 'all' && <Package2 className="h-4 w-4 text-pink-500" />}
-                        {category.id !== 'all' && <Shirt className="h-4 w-4 text-pink-500" />}
-                        <span className="ml-2">{category.name}</span>
+                      <div className="flex flex-col">
+                        <div className="flex items-center">
+                          {category.id === 'all' && <Package2 className="h-4 w-4 text-pink-500" />}
+                          {category.id === 'all' && <Package2 className="h-4 w-4 text-pink-500" />}
+                          {category.id !== 'all' && <Shirt className="h-4 w-4 text-pink-500" />}
+                          <span className="ml-2">{category.name}</span>
+                        </div>
+                        
+                        {/* Ajoutez les étoiles pour chaque catégorie */}
+                        {category.id !== 'all' && (
+                          <div className="ml-6 mt-1">
+                            <CategoryStockRating categoryId={category.id} articles={articles} />
+                          </div>
+                        )}
                       </div>
                     </SelectItem>
                   ))}
@@ -408,8 +536,12 @@ export default function Inventaire() {
                         {article.nom.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
                       </h3>
                       <p className="text-gray-600 dark:text-gray-300">
-                        Prix: {article.prix.toLocaleString()} Ar | Stock prédefini: {article.stockPredefini} unités
+                        Prix: {article.prix.toLocaleString()} Ar
                       </p>
+                      
+                      {/* Notation en étoiles basée sur la quantité */}
+                      <StockRating stock={article.stockPredefini} />
+                      
                       <div className="flex items-center gap-2 mt-1">
                         <Tag className="w-4 h-4 text-pink-500" />
                         <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
@@ -522,6 +654,12 @@ export default function Inventaire() {
                   Stock système: <span className="font-bold">{selectedArticle.stockPredefini}</span> unités | 
                   Stock compté: <span className="font-bold">{selectedArticle.stockComptage}</span> unités
                 </p>
+                
+                {/* Affichage des étoiles dans la boîte de dialogue */}
+                <div className="mt-2">
+                  <p className="text-sm text-red-600">Niveau de stock actuel:</p>
+                  <StockRating stock={selectedArticle.stockPredefini} />
+                </div>
               </div>
               
               <div className="space-y-4">
@@ -572,6 +710,63 @@ export default function Inventaire() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Rapport d'inventaire */}
+      <div className="w-full max-w-7xl mx-auto px-4 pb-12 sm:px-6 lg:px-8">
+        <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-6 border-2 border-pink-200/50 dark:border-purple-700/50">
+          <h2 className="text-xl font-semibold mb-4 text-pink-600">Rapport d'inventaire</h2>
+          <div className="flex flex-wrap gap-4 items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Date d'inventaire: <span className="font-medium text-pink-600">{formattedDate}</span></p>
+              <p className="text-sm text-gray-600">Responsable: <span className="font-medium text-pink-600">{responsableName}</span></p>
+              {assignedCategory && (
+                <p className="text-sm text-gray-600">
+                  Catégorie: <span className="font-medium text-pink-600">
+                    {categories.find(c => c.id === assignedCategory)?.name}
+                  </span>
+                </p>
+              )}
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                <span className="text-xs">5 étoiles (≥50)</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 rounded-full bg-orange-500"></div>
+                <span className="text-xs">4 étoiles (≥30)</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <span className="text-xs">3 étoiles (≥15)</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                <span className="text-xs">2 étoiles (≥5)</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 rounded-full bg-gray-500"></div>
+                <span className="text-xs">1 étoile (&lt;5)</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Notation des catégories */}
+          <div className="mt-6">
+            <h3 className="text-sm font-medium text-gray-700 mb-2">Notation des catégories:</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+              {categories.filter(c => c.id !== 'all').map(category => (
+                <div key={category.id} className="flex items-center gap-2 bg-white/50 p-3 rounded-lg">
+                  <Shirt className="h-4 w-4 text-pink-500" />
+                  <span className="text-xs font-medium">{category.name}:</span>
+                  <CategoryStockRating categoryId={category.id} articles={articles} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Footer moderne */}
       <footer className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t-2 border-pink-300/50">

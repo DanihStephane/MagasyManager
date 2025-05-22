@@ -3,11 +3,26 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { HomeButton } from "@/components/HomeButton";
-import { Package2, Users, Tag, ArrowRight, UserCheck } from "lucide-react";
+import { Package2, Users, Tag, ArrowRight, UserCheck, Star } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+
+interface Article {
+  id: number;
+  nom: string;
+  prix: number;
+  stockPredefini: number;
+  stockComptage: number | null;
+  categorie: string;
+  image: string;
+  reference: string;
+  tentatives: number;
+  remarque: string;
+  estVerifie: boolean;
+  estEnErreur: boolean;
+}
 
 interface InventaireAssignment {
   id: string;
@@ -20,14 +35,66 @@ interface InventaireAssignment {
   estTermine: boolean;
 }
 
+// Fonction pour déterminer la notation en étoiles basée sur la quantité totale d'articles dans une catégorie
+const getCategoryRating = (totalStock: number): { rating: number; color: string } => {
+  if (totalStock >= 200) return { rating: 5, color: "text-red-500" }; // Beaucoup d'articles - rouge
+  if (totalStock >= 150) return { rating: 4, color: "text-orange-500" }; // Nombre élevé - orange
+  if (totalStock >= 100) return { rating: 3, color: "text-yellow-500" }; // Nombre moyen - jaune
+  if (totalStock >= 50) return { rating: 2, color: "text-blue-500" }; // Peu d'articles - bleu
+  return { rating: 1, color: "text-gray-500" }; // Très peu d'articles - gris
+};
+
+// Composant pour afficher les étoiles pour une catégorie
+const CategoryStockRating = ({ 
+  categoryId, 
+  articles,
+  showCount = false 
+}: { 
+  categoryId: string;
+  articles: Article[];
+  showCount?: boolean;
+}) => {
+  // Calculer le stock total pour cette catégorie
+  const categoryArticles = categoryId === "all" 
+    ? articles 
+    : articles.filter(a => a.categorie === categoryId);
+  
+  const totalStock = categoryArticles.reduce((sum, article) => sum + article.stockPredefini, 0);
+  const { rating, color } = getCategoryRating(totalStock);
+  
+  return (
+    <div className="flex items-center gap-1" title={`Niveau de stock: ${rating}/5`}>
+      {[...Array(5)].map((_, i) => (
+        <Star 
+          key={i} 
+          className={`w-4 h-4 ${i < rating ? color : 'text-gray-200'}`} 
+          fill={i < rating ? "currentColor" : "none"} 
+        />
+      ))}
+      {showCount && (
+        <span className={`ml-1 text-xs font-medium ${color}`}>
+          {totalStock} articles
+        </span>
+      )}
+    </div>
+  );
+};
+
 export default function SelectionInventaire() {
   const navigate = useNavigate();
   const [assignments, setAssignments] = useState<InventaireAssignment[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedAssignment, setSelectedAssignment] = useState<InventaireAssignment | null>(null);
   const [responsableName, setResponsableName] = useState("");
+  const [articles, setArticles] = useState<Article[]>([]);
 
   useEffect(() => {
+    // Charger les articles pour les notations en étoiles
+    const savedArticles = localStorage.getItem('inventaireArticles');
+    if (savedArticles) {
+      setArticles(JSON.parse(savedArticles));
+    }
+    
     // Charger les assignations depuis localStorage ou initialiser
     const savedAssignments = localStorage.getItem('inventaireAssignments');
     if (savedAssignments) {
@@ -132,6 +199,11 @@ export default function SelectionInventaire() {
 
   const stats = getProgressStats();
 
+  // Calculer le nombre réel d'articles par catégorie à partir des données d'articles
+  const getArticleCountByCategory = (categoryId: string) => {
+    return articles.filter(article => article.categorie === categoryId).length;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-400/30 via-purple-400/30 to-blue-400/30 flex flex-col">
       <div className="absolute inset-0 bg-[url('https://st4.depositphotos.com/1076214/20486/i/1600/depositphotos_204867158-stock-photo-interior-fashion-clothing-store-women.jpg')] bg-cover bg-center bg-no-repeat opacity-50 -z-[1]" />
@@ -184,7 +256,9 @@ export default function SelectionInventaire() {
                 <div>
                   <p className="text-sm text-gray-500">Articles à inventorier</p>
                   <p className="text-2xl font-bold text-purple-600">
-                    {assignments.reduce((sum, a) => sum + a.nombreArticles, 0)}
+                    {articles.length > 0 
+                      ? articles.length 
+                      : assignments.reduce((sum, a) => sum + a.nombreArticles, 0)}
                   </p>
                 </div>
                 <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
@@ -221,8 +295,21 @@ export default function SelectionInventaire() {
                   {assignment.nom}
                 </h3>
                 
+                {/* Ajout des étoiles pour chaque catégorie */}
+                {articles.length > 0 && (
+                  <div className="mb-2">
+                    <CategoryStockRating 
+                      categoryId={assignment.categorie} 
+                      articles={articles} 
+                      showCount={true}
+                    />
+                  </div>
+                )}
+                
                 <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  {assignment.nombreArticles} articles à inventorier
+                  {articles.length > 0 
+                    ? getArticleCountByCategory(assignment.categorie) 
+                    : assignment.nombreArticles} articles à inventorier
                 </p>
                 
                 {assignment.responsable ? (
@@ -329,8 +416,38 @@ export default function SelectionInventaire() {
         </DialogContent>
       </Dialog>
 
-           {/* Footer */}
-           <footer className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t-2 border-pink-300/50">
+      {/* Légende des étoiles */}
+<div className="w-full max-w-7xl mx-auto px-4 pb-8 sm:px-6 lg:px-8">
+  <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-4 border-2 border-pink-200/50 dark:border-purple-700/50">
+    <h3 className="text-sm font-medium text-gray-700 mb-2">Légende des étoiles:</h3>
+    <div className="flex flex-wrap gap-4">
+      <div className="flex items-center gap-1">
+        <div className="w-3 h-3 rounded-full bg-red-500"></div>
+        <span className="text-xs text-red-500 font-medium">5 étoiles (≥200 articles)</span>
+      </div>
+      <div className="flex items-center gap-1">
+        <div className="w-3 h-3 rounded-full bg-orange-500"></div>
+        <span className="text-xs text-orange-500 font-medium">4 étoiles (≥150 articles)</span>
+      </div>
+      <div className="flex items-center gap-1">
+        <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+        <span className="text-xs text-yellow-500 font-medium">3 étoiles (≥100 articles)</span>
+      </div>
+      <div className="flex items-center gap-1">
+        <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+        <span className="text-xs text-blue-500 font-medium">2 étoiles (≥50 articles)</span>
+      </div>
+      <div className="flex items-center gap-1">
+        <div className="w-3 h-3 rounded-full bg-gray-500"></div>
+        <span className="text-xs text-gray-500 font-medium">1 étoile (&lt;50 articles)</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+      {/* Footer */}
+      <footer className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t-2 border-pink-300/50">
         <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
           <p className="text-center text-sm text-gray-600 dark:text-gray-300">
             © {new Date().getFullYear()} MagasyManager. Tous droits réservés.
@@ -340,3 +457,4 @@ export default function SelectionInventaire() {
     </div>
   );
 }
+
