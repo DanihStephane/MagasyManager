@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Fingerprint, Lock, Unlock, CheckCircle } from 'lucide-react';
+import { useState } from 'react';
+import { Fingerprint, Lock, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 

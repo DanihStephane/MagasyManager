@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Home, Trash2, Plus, Calculator, ArrowRight, ShoppingCart, ArrowLeft, Printer, Filter,Shirt,DollarSign, Package} from "lucide-react";
+import { Trash2, Plus, Calculator, ShoppingCart, ArrowLeft, Printer, Filter,Shirt, Package} from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +17,7 @@ import { HomeButton } from "@/components/HomeButton"
 interface Product {
   category: string;
   quantity: number;
+  price?: number;
 }
 
 interface CategoryItem {

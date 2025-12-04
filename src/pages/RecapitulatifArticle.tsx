@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Home, Plus, Tag, Box, Palette, Ruler, Hash, CreditCard, Package2, FileText, Shirt, ClipboardList, LayoutGrid, MapPin } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Home, Plus, Tag, Box, Palette, Ruler, Hash, CreditCard, Package2, FileText, Shirt, ClipboardList, LayoutGrid, MapPin } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export default function RecapitulatifArticle() {
@@ -40,7 +40,7 @@ export default function RecapitulatifArticle() {
   
     const handleValidation = () => {
       // Format the selections into an Article object
-      const newArticle: Article = {
+      const newArticle = {
         id: Date.now(), // Generate unique ID
         nom: `${selections.classe} ${selections.matiere} ${selections.genre} ${selections.motif}`,
         reference: `${selections.reference}`,
@@ -125,7 +125,7 @@ export default function RecapitulatifArticle() {
   
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {selections && Object.entries(selections).map(([key, value]) => {
+                  {selections && Object.entries(selections).map(([key, value]: [string, any]) => {
                     if (key === 'image') return null;
                     
                     const getIcon = (key: string) => {
@@ -162,7 +162,7 @@ export default function RecapitulatifArticle() {
                                   <span>{value}</span>
                                 </div>
                               ) : (
-                                <span>{choicesMap[key as keyof typeof choicesMap]?.[value as string] || value}</span>
+                                <span>{(choicesMap as any)[key]?.[value] || value}</span>
                               )}
                             </div>
                           </div>

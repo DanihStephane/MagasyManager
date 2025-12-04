@@ -52,7 +52,7 @@ export default function AjouterArticle() {
     description: "",
     emplacement: ""
   });
-  const [showRecap, setShowRecap] = useState(false);  // Définition des étapes
+  // Définition des étapes
   const navigate = useNavigate();
   const steps: Step[] = [
     {
@@ -288,7 +288,7 @@ return (
           />
           
           {/* Points du stepper */}
-          {steps.map((step, index) => (
+          {steps.map((_, index) => (
             <div key={index} className="z-10">
               <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300
                 ${index === currentStep 
@@ -824,10 +824,10 @@ return (
             {steps[currentStep].choices?.map((choice) => (
               <Card 
                 key={choice.id}
-                className={`cursor-pointer hover:scale-105 group relative overflow-hidden rounded-2xl 
-                  border-2 border-pink-200/50 dark:border-purple-700/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl 
+                className={`cursor-pointer hover:scale-105 group relative overflow-hidden rounded-2xl
+                  border-2 border-pink-200/50 dark:border-purple-700/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl
                   hover:shadow-xl hover:shadow-pink-500/20 duration-300
-                  ${selections[steps[currentStep].title.toLowerCase()] === choice.id ? 'ring-2 ring-pink-500' : ''}`}
+                  ${selections[steps[currentStep].title.toLowerCase() as keyof typeof selections] === choice.id ? 'ring-2 ring-pink-500' : ''}`}
                 onClick={() => {
                   setSelections({
                     ...selections,
@@ -874,7 +874,7 @@ return (
             <Button
               className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:opacity-90"
               onClick={() => setCurrentStep(prev => prev + 1)}
-              disabled={!selections[steps[currentStep].title.toLowerCase()]}
+              disabled={!selections[steps[currentStep].title.toLowerCase() as keyof typeof selections]}
             >
               Suivant
             </Button>

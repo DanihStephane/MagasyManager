@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Home, Calendar, Filter, Search, Store, BarChart2, CalendarDays} from "lucide-react";
+import { Calendar, Filter, Search, Store, BarChart2, CalendarDays} from "lucide-react";
 import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import {
@@ -370,14 +370,14 @@ export default function Statistique() {
                 
                       <div className="flex items-center justify-between p-2 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors">
                         <span className="text-muted-foreground">Prix unitaire</span>
-                        <span className="font-semibold">{item.unitPrice.toLocaleString(2)}Ar</span>
+                        <span className="font-semibold">{item.unitPrice.toLocaleString()}Ar</span>
                       </div>
                 
                       {/* Total Price */}
                       <div className="mt-4 p-3 rounded-xl bg-gradient-to-r from-primary/20 to-secondary/20 flex justify-between items-center">
                         <span className="font-medium text-primary">Total</span>
                         <span className="text-lg font-bold text-primary">
-                          {item.totalPrice.toLocaleString(2)}Ar
+                          {item.totalPrice.toLocaleString()}Ar
                         </span>
                       </div>
                     </div>

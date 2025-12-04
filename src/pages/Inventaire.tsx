@@ -4,11 +4,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Package2, Tag, Shirt, AlertCircle, Check, X, ArrowLeft, User, Calendar, Star } from "lucide-react";
+import { Search, Package2, Tag, Shirt, AlertCircle, Check, ArrowLeft, User, Calendar, Star } from "lucide-react";
 import { HomeButton } from "@/components/HomeButton";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
@@ -31,7 +31,174 @@ interface Article {
 }
 
 const INITIAL_ARTICLES: Article[] = [
-  // ... (garder les articles existants)
+  {
+    id: 1,
+    nom: "T-shirt Premium",
+    prix: 25000,
+    stockPredefini: 45,
+    stockComptage: null,
+    categorie: "haut",
+    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400",
+    reference: "#123456",
+    tentatives: 0,
+    remarque: "",
+    estVerifie: false,
+    estEnErreur: false
+  },
+  {
+    id: 2,
+    nom: "Jean Slim",
+    prix: 45000,
+    stockPredefini: 32,
+    stockComptage: null,
+    categorie: "bas",
+    image: "https://images.unsplash.com/photo-1542272604-787c3835535d?w=400",
+    reference: "#123457",
+    tentatives: 0,
+    remarque: "",
+    estVerifie: false,
+    estEnErreur: false
+  },
+  {
+    id: 3,
+    nom: "Veste en Cuir",
+    prix: 120000,
+    stockPredefini: 18,
+    stockComptage: null,
+    categorie: "veste",
+    image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400",
+    reference: "#123458",
+    tentatives: 0,
+    remarque: "",
+    estVerifie: false,
+    estEnErreur: false
+  },
+  {
+    id: 4,
+    nom: "Robe d'été",
+    prix: 55000,
+    stockPredefini: 28,
+    stockComptage: null,
+    categorie: "robe",
+    image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400",
+    reference: "#123459",
+    tentatives: 0,
+    remarque: "",
+    estVerifie: false,
+    estEnErreur: false
+  },
+  {
+    id: 5,
+    nom: "Chemise Blanche",
+    prix: 35000,
+    stockPredefini: 52,
+    stockComptage: null,
+    categorie: "haut",
+    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400",
+    reference: "#123460",
+    tentatives: 0,
+    remarque: "",
+    estVerifie: false,
+    estEnErreur: false
+  },
+  {
+    id: 6,
+    nom: "Pantalon Chino",
+    prix: 42000,
+    stockPredefini: 38,
+    stockComptage: null,
+    categorie: "bas",
+    image: "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=400",
+    reference: "#123461",
+    tentatives: 0,
+    remarque: "",
+    estVerifie: false,
+    estEnErreur: false
+  },
+  {
+    id: 7,
+    nom: "Blouson Aviateur",
+    prix: 95000,
+    stockPredefini: 15,
+    stockComptage: null,
+    categorie: "veste",
+    image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400",
+    reference: "#123462",
+    tentatives: 0,
+    remarque: "",
+    estVerifie: false,
+    estEnErreur: false
+  },
+  {
+    id: 8,
+    nom: "Robe Cocktail",
+    prix: 75000,
+    stockPredefini: 22,
+    stockComptage: null,
+    categorie: "robe",
+    image: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=400",
+    reference: "#123463",
+    tentatives: 0,
+    remarque: "",
+    estVerifie: false,
+    estEnErreur: false
+  },
+  {
+    id: 9,
+    nom: "Pull Col Roulé",
+    prix: 48000,
+    stockPredefini: 41,
+    stockComptage: null,
+    categorie: "haut",
+    image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400",
+    reference: "#123464",
+    tentatives: 0,
+    remarque: "",
+    estVerifie: false,
+    estEnErreur: false
+  },
+  {
+    id: 10,
+    nom: "Short Bermuda",
+    prix: 28000,
+    stockPredefini: 35,
+    stockComptage: null,
+    categorie: "bas",
+    image: "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=400",
+    reference: "#123465",
+    tentatives: 0,
+    remarque: "",
+    estVerifie: false,
+    estEnErreur: false
+  },
+  {
+    id: 11,
+    nom: "Trench-Coat",
+    prix: 110000,
+    stockPredefini: 12,
+    stockComptage: null,
+    categorie: "veste",
+    image: "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=400",
+    reference: "#123466",
+    tentatives: 0,
+    remarque: "",
+    estVerifie: false,
+    estEnErreur: false
+  },
+  {
+    id: 12,
+    nom: "Robe Longue",
+    prix: 68000,
+    stockPredefini: 25,
+    stockComptage: null,
+    categorie: "robe",
+    image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=400",
+    reference: "#123467",
+    tentatives: 0,
+    remarque: "",
+    estVerifie: false,
+    estEnErreur: false
+  }
 ];
 
 const categories = [

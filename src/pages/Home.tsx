@@ -1,10 +1,9 @@
-import { Layout, Sun, Moon, Languages, MapPin, Navigation, LogOut, Package, Search, Filter } from 'lucide-react';
+import { Layout, Sun, Moon, Languages, MapPin, LogOut, Package } from 'lucide-react';
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle, CardContent} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
 import { useTheme } from '@/hooks/use-theme';
 import { useLanguage } from '@/hooks/use-language';
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CheckCircle } from "lucide-react";

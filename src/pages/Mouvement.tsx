@@ -2,8 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Home, Search, Filter, ChevronLeft, ChevronRight, ArrowUpDown, Tag, Box, Store, Building2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Search, ChevronLeft, ChevronRight, ArrowUpDown, Tag, Box, Store, Building2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 import { HomeButton } from "@/components/HomeButton";
@@ -219,8 +218,8 @@ const stores = [
   { id: "ouest", name: "Boutique Ouest" }
 ];
   // Update the filterItems function to include store filtering
-const filterItems = (items) => {
-  return items.filter(item => {
+const filterItems = (items: any[]) => {
+  return items.filter((item: any) => {
     const matchesSearch = item.article.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === "all" ? true : item.categorie === selectedCategory;
     const matchesStore = selectedStore === "all" ? true : 
@@ -229,16 +228,16 @@ const filterItems = (items) => {
   });
 };
 
-  const paginateItems = (items) => {
+  const paginateItems = (items: any[]) => {
     const filteredItems = filterItems(items);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     return filteredItems.slice(startIndex, endIndex);
   };
 
-  const totalPages = (items) => Math.ceil(filterItems(items).length / itemsPerPage);
+  const totalPages = (items: any[]) => Math.ceil(filterItems(items).length / itemsPerPage);
 
-  const PaginationControls = ({ items }) => (
+  const PaginationControls = ({ items }: { items: any[] }) => (
     <div className="flex justify-center items-center gap-1 mt-8">
       <Button 
         variant="ghost" 

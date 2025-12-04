@@ -2,8 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Home, Search, ChevronLeft, ChevronRight, Tag, Shirt } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Search, ChevronLeft, ChevronRight, Tag, Shirt } from "lucide-react";
 import { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { ZoomIn, ZoomOut, X } from "lucide-react"

@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { PlusCircle, Pencil, Trash2, Home, ChevronLeft, ChevronRight } from "lucide-react";
+import { PlusCircle, Pencil, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState , useEffect} from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search } from "lucide-react";
-import { ArrowLeft, Plus, Tag, Box, Palette, Ruler, Hash, CreditCard, Package2, FileText, Shirt, MapPin } from "lucide-react";
+import { Tag, Box, Palette, CreditCard, Package2, Shirt, MapPin } from "lucide-react";
 import { HomeButton } from "@/components/HomeButton";
 
 // Ajoutez cette interface pour typer les articles

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Home, Trash2, Plus, Calculator, ArrowRight, ShoppingCart, ArrowLeft, Printer, ShoppingBag, Shirt } from "lucide-react";import { Link } from "react-router-dom";
+import { Trash2, Plus, Calculator, ShoppingCart, ArrowLeft, ArrowRight, Printer, ShoppingBag, Shirt } from "lucide-react";
 import { useState } from "react";
 import {
   Accordion,

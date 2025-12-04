@@ -1,14 +1,13 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useLanguage } from "@/hooks/use-language";
-import { 
-  Package, Search, Filter, Plus, Edit, Trash2, 
-  ArrowLeft, Save, X, CheckCircle, Layers, MapPin,
-  Package2, Home, PlusCircle
+import {
+  Package, Search, Edit, Trash2,
+  Save, X, Layers, MapPin,
+  Package2, PlusCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { HomeButton } from "@/components/HomeButton";
 import {
   Dialog,
@@ -17,8 +16,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-  DialogClose,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -50,7 +47,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 
 // Définition des interfaces
 interface Article {
@@ -175,9 +171,7 @@ const ballesDemo: Balle[] = [
 // Composant principal
 export default function GestionBalles() {
   const { language } = useLanguage();
-  const navigate = useNavigate();
   const [balles, setBalles] = useState<Balle[]>(ballesDemo);
-  const [articles, setArticles] = useState<Article[]>(articlesDemo);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterEmplacement, setFilterEmplacement] = useState("_all");
   const [filterEtage, setFilterEtage] = useState("_all");
@@ -190,10 +184,6 @@ export default function GestionBalles() {
   const [numero, setNumero] = useState("");
   const [emplacement, setEmplacement] = useState("");
   const [etage, setEtage] = useState("");
-  const [quantite, setQuantite] = useState(0);
-  
-  // État pour la visualisation du dépôt
-  const [showDepot, setShowDepot] = useState(false);
   
   // Emplacements disponibles
   const emplacements = ["Zone A", "Zone B", "Zone C", "Zone D"];
@@ -215,7 +205,6 @@ export default function GestionBalles() {
     setNumero("");
     setEmplacement("");
     setEtage("");
-    setQuantite(0);
     setIsEditMode(false);
   };
   
@@ -231,7 +220,6 @@ export default function GestionBalles() {
     setNumero(balle.numero);
     setEmplacement(balle.emplacement);
     setEtage(balle.etage);
-    setQuantite(balle.quantite);
     setSelectedArticles([...balle.articles]);
     setIsEditMode(true);
     setIsDialogOpen(true);
@@ -312,11 +300,6 @@ export default function GestionBalles() {
   // Vérifier si un article est sélectionné
   const isArticleSelected = (articleId: number) => {
     return selectedArticles.some(item => item.article.id === articleId);
-  };
-  
-  // Retourner à la page d'accueil
-  const handleBack = () => {
-    navigate('/');
   };
 
   return (
@@ -1052,7 +1035,7 @@ export default function GestionBalles() {
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 p-2">
-                  {articles.map((article) => (
+                  {articlesDemo.map((article: any) => (
                     <div 
                       key={article.id} 
                       className={`flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors ${

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Home, Trash2, Plus, Calculator, ArrowRight, ShoppingCart, ArrowLeft, Printer, Filter,Shirt,DollarSign, Package} from "lucide-react";
+import { Home, Trash2, Plus, Calculator, ShoppingCart, ArrowLeft, Printer, Filter,Shirt,DollarSign, Package} from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import {
@@ -20,6 +20,7 @@ import { DepassementContent } from "@/components/DepassementContent";
 interface Product {
   category: string;
   quantity: number;
+  price?: number;
 }
 
 interface CategoryItem {
@@ -45,7 +46,6 @@ export default function CommandeStock() {
   const [newQuantityTemp, setNewQuantityTemp] = useState('');
 
   const [businessPrice, setBusinessPrice] = useState(1000000); // Prix d'affaire initial
-    const [totalPrice, setTotalPrice] = useState(0); // Prix total des articles
 
     const [showDepassementDialog, setShowDepassementDialog] = useState(false);
 
