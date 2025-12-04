@@ -18,6 +18,7 @@ import Tracking from './pages/Tracking';
 import SelectionInventaire from "./pages/SelectionInventaire";
 import UnlockScreen from './pages/Unlock';
 import GestionBalles from './pages/GestionBalles';
+import Documentation from './pages/Documentation';
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
       <Route path="/inventaire" element={<Inventaire />} />
       <Route path="/tracking" element={<Tracking />} />
       <Route path="/selection-inventaire" element={<SelectionInventaire />} />
+      <Route path="/documentation" element={<Documentation />} />
     </Routes>
   );
 }

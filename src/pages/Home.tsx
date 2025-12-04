@@ -1,4 +1,4 @@
-import { Layout, Sun, Moon, Languages, MapPin, LogOut, Package } from 'lucide-react';
+import { Layout, Sun, Moon, Languages, MapPin, LogOut, Package, FileText } from 'lucide-react';
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle, CardContent} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
@@ -71,6 +71,18 @@ export default function Home() {
             </h1>
           </div>
           <div className="flex items-center gap-2">
+            {/* Documentation Button */}
+            <Button
+              asChild
+              variant="outline"
+              className="rounded-full bg-gradient-to-r from-indigo-400 to-purple-500 hover:from-indigo-500 hover:to-purple-600 text-white border-none flex items-center gap-2 px-4 py-2"
+            >
+              <Link to="/documentation" className="flex items-center gap-2">
+                <FileText className="h-5 w-5" />
+                <span>{language === 'fr' ? 'Documentation' : 'Fanoroana'}</span>
+              </Link>
+            </Button>
+
             {/* Lock App Button */}
             <Button
               variant="outline"
